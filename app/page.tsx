@@ -4,19 +4,22 @@ import { Button } from "@/components/ui/button";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CollisionPriority } from "@dnd-kit/abstract";
+import { applyRules, formatRule, Rule } from "@/lib/rule";
 
-function Sortable({
+function SortableButton({
     children,
     id,
     index,
     group,
+    className,
 }: {
     children: React.ReactNode;
     id: number;
     index: number;
     group: string;
+    className?: string;
 }) {
     const { ref, isDragging } = useSortable({
         id,
@@ -27,7 +30,7 @@ function Sortable({
     });
 
     return (
-        <Button ref={ref} className="h-1/4 w-1/6" data-dragging={isDragging}>
+        <Button ref={ref} className={className} data-dragging={isDragging}>
             {children}
         </Button>
     );
@@ -40,7 +43,7 @@ function Column({
 }: {
     children: React.ReactNode;
     id: string;
-    className: string;
+    className?: string;
 }) {
     const { ref } = useDroppable({
         id,
@@ -77,16 +80,29 @@ function Column({
 
 export default function Home() {
     const rules = [
-        { id: 0, rule: "p -> f" },
-        { id: 1, rule: "a -> e" },
+        { id: 0, rule: { pattern: "p", replacement: "f" } },
+        { id: 1, rule: { pattern: "t", replacement: "d" } },
     ];
 
     const [items, setItems] = useState<{
-        [k: string]: { id: number; rule: string }[];
+        [k: string]: { id: number; rule: Rule }[];
     }>({
         bank: [rules[0]],
         solution: [rules[1]],
     });
+
+    const initialWord = "pater";
+
+    const [word, setWord] = useState(initialWord);
+
+    useEffect(() => {
+        setWord(
+            applyRules(
+                items.solution.map((x) => x.rule),
+                initialWord,
+            ),
+        );
+    }, [items]);
 
     // const { ref: bankRef } = useDroppable({
     //     id: "bank",
@@ -114,23 +130,27 @@ export default function Home() {
                 <div className="h-1/2 w-full flex items-center justify-center">
                     <Column
                         id="solution"
-                        className="h-full w-1/2 flex flex-col items-center justify-center"
+                        className="h-full w-1/2 flex flex-col items-center justify-center gap-4"
                     >
                         {/* {items.solution.length > 0 ? ( */}
                         {items.solution.map((rule, i) => (
-                            <Sortable
+                            <SortableButton
                                 key={rule.id}
                                 id={rule.id}
                                 index={i}
                                 group="solution"
+                                className="h-1/4 w-1/3"
                             >
-                                {rule.rule}
-                            </Sortable>
+                                {formatRule(rule.rule)}
+                            </SortableButton>
                         ))}
                         {/* ) : (
                             <Placeholder />
                         )} */}
                     </Column>
+                    <div className="h-full w-1/2 flex items-center justify-center text-9xl font-bold">
+                        {word}
+                    </div>
                 </div>
                 <Column
                     id="bank"
@@ -143,14 +163,15 @@ export default function Home() {
                     {"a -> e"}
                 </Button> */}
                     {items.bank.map((rule, i) => (
-                        <Sortable
+                        <SortableButton
                             key={rule.id}
                             id={rule.id}
                             index={i}
                             group="bank"
+                            className="h-1/4 w-1/6"
                         >
-                            {rule.rule}
-                        </Sortable>
+                            {formatRule(rule.rule)}
+                        </SortableButton>
                     ))}
                 </Column>
             </main>
