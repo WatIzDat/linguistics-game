@@ -60,7 +60,13 @@ function Column({
     );
 }
 
-export default function LevelPage({ level }: { level: Level }) {
+export default function LevelPage({
+    level,
+    levelNum,
+}: {
+    level: Level;
+    levelNum: number;
+}) {
     // const rules = [
     //     { id: 0, rule: { pattern: "p", replacement: "f" } },
     //     { id: 1, rule: { pattern: "t", replacement: "d" } },
@@ -81,6 +87,7 @@ export default function LevelPage({ level }: { level: Level }) {
     const [word, setWord] = useState(initialWord);
 
     const [success, setSuccess] = useState(false);
+    const [completed, setCompleted] = useState(false);
 
     useEffect(() => {
         const newWord = applyRules(
@@ -91,6 +98,10 @@ export default function LevelPage({ level }: { level: Level }) {
         setWord(newWord);
 
         setSuccess(newWord === targetWord);
+
+        if (newWord === targetWord) {
+            setCompleted(true);
+        }
     }, [items]);
 
     return (
@@ -99,11 +110,11 @@ export default function LevelPage({ level }: { level: Level }) {
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="flex h-screen w-screen flex-col items-center justify-between bg-yellow-50 sm:items-start">
+            <main className="flex h-screen w-screen flex-col items-center justify-between bg-yellow-50 p-4 sm:items-start">
                 <div className="h-1/2 w-full flex items-center justify-center">
                     <Column
                         id="solution"
-                        className="h-full w-1/2 flex flex-col items-center justify-center gap-4"
+                        className="h-full w-1/2 flex flex-col items-center justify-center gap-4 flex-wrap"
                     >
                         {items.solution.map((rule, i) => (
                             <SortableButton
@@ -139,6 +150,14 @@ export default function LevelPage({ level }: { level: Level }) {
                         </SortableButton>
                     ))}
                 </Column>
+                {completed && (
+                    <Button
+                        className="ml-auto bg-blue-500 w-20 h-12"
+                        onClick={() => (location.href = `/${levelNum + 1}`)}
+                    >
+                        Next
+                    </Button>
+                )}
             </main>
         </DragDropProvider>
     );

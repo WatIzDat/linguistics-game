@@ -16,5 +16,5 @@ export default async function Page({
 
     console.log(level);
 
-    return <LevelPage level={level} />;
+    return <LevelPage level={level} levelNum={Number.parseInt(levelNum)} />;
 }
