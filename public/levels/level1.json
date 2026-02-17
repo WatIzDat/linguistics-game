@@ -1,0 +1,8 @@
+{
+    "initialWord": "pater",
+    "targetWord": "fader",
+    "rules": [
+        { "pattern": "p", "replacement": "f" },
+        { "pattern": "t", "replacement": "d" }
+    ]
+}

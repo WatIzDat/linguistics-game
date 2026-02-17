@@ -1,0 +1,8 @@
+{
+    "initialWord": "pater",
+    "targetWord": "piter",
+    "rules": [
+        { "pattern": "a", "replacement": "e" },
+        { "pattern": "e", "replacement": "i" }
+    ]
+}
