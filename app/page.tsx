@@ -1,65 +1,159 @@
-import Image from "next/image";
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { move } from "@dnd-kit/helpers";
+import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
+import { useSortable } from "@dnd-kit/react/sortable";
+import { useState } from "react";
+import { CollisionPriority } from "@dnd-kit/abstract";
+
+function Sortable({
+    children,
+    id,
+    index,
+    group,
+}: {
+    children: React.ReactNode;
+    id: number;
+    index: number;
+    group: string;
+}) {
+    const { ref, isDragging } = useSortable({
+        id,
+        index,
+        type: "item",
+        accept: "item",
+        group,
+    });
+
+    return (
+        <Button ref={ref} className="h-1/4 w-1/6" data-dragging={isDragging}>
+            {children}
+        </Button>
+    );
+}
+
+function Column({
+    children,
+    id,
+    className,
+}: {
+    children: React.ReactNode;
+    id: string;
+    className: string;
+}) {
+    const { ref } = useDroppable({
+        id,
+        type: "column",
+        accept: "item",
+        collisionPriority: CollisionPriority.Low,
+    });
+
+    return (
+        <div className={className} ref={ref}>
+            {children}
+        </div>
+    );
+}
+
+// const Placeholder = () => {
+//     const { ref } = useSortable({
+//         id: "placeholder",
+//         index: 0,
+//         type: "item",
+//         accept: "item",
+//         group: "solution",
+//     });
+//     return (
+//         <div
+//             className="text-gray-400 text-center"
+//             // id="placeholder"
+//             ref={ref}
+//         >
+//             Drop here
+//         </div>
+//     );
+// };
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    const rules = [
+        { id: 0, rule: "p -> f" },
+        { id: 1, rule: "a -> e" },
+    ];
+
+    const [items, setItems] = useState<{
+        [k: string]: { id: number; rule: string }[];
+    }>({
+        bank: [rules[0]],
+        solution: [rules[1]],
+    });
+
+    // const { ref: bankRef } = useDroppable({
+    //     id: "bank",
+    //     // type: "column",
+    //     // accept: "item",
+    //     collisionPriority: CollisionPriority.Low,
+    // });
+
+    // const { ref: solutionRef } = useDroppable({
+    //     id: "solution",
+    //     // type: "column",
+    //     // accept: "item",
+    //     collisionPriority: CollisionPriority.Low,
+    // });
+
+    return (
+        <DragDropProvider
+            onDragOver={(event) => {
+                // console.log(event.operation.target?.id);
+                console.log(items);
+                setItems((items) => move(items, event));
+            }}
+        >
+            <main className="flex h-screen w-screen flex-col items-center justify-between bg-yellow-50 sm:items-start">
+                <div className="h-1/2 w-full flex items-center justify-center">
+                    <Column
+                        id="solution"
+                        className="h-full w-1/2 flex flex-col items-center justify-center"
+                    >
+                        {/* {items.solution.length > 0 ? ( */}
+                        {items.solution.map((rule, i) => (
+                            <Sortable
+                                key={rule.id}
+                                id={rule.id}
+                                index={i}
+                                group="solution"
+                            >
+                                {rule.rule}
+                            </Sortable>
+                        ))}
+                        {/* ) : (
+                            <Placeholder />
+                        )} */}
+                    </Column>
+                </div>
+                <Column
+                    id="bank"
+                    className="h-1/2 w-full flex gap-4 items-center justify-center"
+                >
+                    {/* <Button ref={draggableRef} className="h-[50%] w-1/6">
+                    {"p -> f"}
+                </Button>
+                <Button ref={draggableRef} className="h-[50%] w-1/6">
+                    {"a -> e"}
+                </Button> */}
+                    {items.bank.map((rule, i) => (
+                        <Sortable
+                            key={rule.id}
+                            id={rule.id}
+                            index={i}
+                            group="bank"
+                        >
+                            {rule.rule}
+                        </Sortable>
+                    ))}
+                </Column>
+            </main>
+        </DragDropProvider>
+    );
 }
