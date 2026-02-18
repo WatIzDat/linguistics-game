@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { Level } from "@/lib/level";
 
 export default function Header({
     levelNum,
-    levelName,
+    level,
     levelCompleted,
 }: {
     levelNum: number;
-    levelName: string;
+    level: Level;
     levelCompleted: boolean;
 }) {
     return (
@@ -22,7 +23,11 @@ export default function Header({
                 </nav>
                 <header className="flex flex-col items-center text-lg">
                     <h1 className="font-bold text-4xl">Level {levelNum}</h1>
-                    <p>{levelName}</p>
+                    <p>{level.name}</p>
+                    <p>
+                        <span className="font-bold">Goal:</span>{" "}
+                        {level.initialWord} → {level.targetWord}
+                    </p>
                 </header>
                 <div className="flex gap-4 text-lg">
                     {/* // <Button
