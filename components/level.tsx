@@ -110,46 +110,56 @@ export default function LevelPage({
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="flex h-screen w-screen flex-col items-center justify-between bg-yellow-50 p-4 sm:items-start">
+            <main className="flex h-screen w-screen flex-col gap-12 items-center justify-between bg-neutral-100 p-12 sm:items-start">
                 <div className="h-1/2 w-full flex items-center justify-center">
-                    <Column
-                        id="solution"
-                        className="h-full w-1/2 flex flex-col items-center justify-center gap-4 flex-wrap"
-                    >
-                        {items.solution.map((rule, i) => (
-                            <SortableButton
-                                key={rule.id}
-                                id={rule.id}
-                                index={i}
-                                group="solution"
-                                className="h-1/4 w-1/3"
-                            >
-                                {formatRule(rule.rule)}
-                            </SortableButton>
-                        ))}
-                    </Column>
+                    <div className="h-full w-1/2 bg-black/10 rounded-4xl">
+                        <h2 className="text-3xl font-semibold ml-6 mt-6 absolute">
+                            Timeline
+                        </h2>
+                        <Column
+                            id="solution"
+                            className="h-full w-full flex flex-col items-center justify-center gap-4 flex-wrap"
+                        >
+                            {items.solution.map((rule, i) => (
+                                <SortableButton
+                                    key={rule.id}
+                                    id={rule.id}
+                                    index={i}
+                                    group="solution"
+                                    className="h-1/4 w-1/3 text-3xl font-light"
+                                >
+                                    {formatRule(rule.rule)}
+                                </SortableButton>
+                            ))}
+                        </Column>
+                    </div>
                     <div
                         className={`h-full w-1/2 flex items-center justify-center text-9xl font-bold ${success && "text-green-500"}`}
                     >
                         {word}
                     </div>
                 </div>
-                <Column
-                    id="bank"
-                    className="h-1/2 w-full flex gap-4 items-center justify-center"
-                >
-                    {items.bank.map((rule, i) => (
-                        <SortableButton
-                            key={rule.id}
-                            id={rule.id}
-                            index={i}
-                            group="bank"
-                            className="h-1/4 w-1/6"
-                        >
-                            {formatRule(rule.rule)}
-                        </SortableButton>
-                    ))}
-                </Column>
+                <div className="h-1/2 w-full bg-black/10 rounded-4xl">
+                    <h2 className="text-3xl font-semibold ml-6 mt-6 absolute">
+                        Changes
+                    </h2>
+                    <Column
+                        id="bank"
+                        className="h-full w-full flex gap-4 items-center justify-center"
+                    >
+                        {items.bank.map((rule, i) => (
+                            <SortableButton
+                                key={rule.id}
+                                id={rule.id}
+                                index={i}
+                                group="bank"
+                                className="h-1/4 w-1/6 text-3xl font-light"
+                            >
+                                {formatRule(rule.rule)}
+                            </SortableButton>
+                        ))}
+                    </Column>
+                </div>
                 {completed && (
                     <Button
                         className="ml-auto bg-blue-500 w-20 h-12"
