@@ -1,7 +1,8 @@
+import { NUM_LEVELS } from "@/lib/level";
 import Link from "next/link";
 
 export default async function Home() {
-    const numLevels = 15;
+    // const numLevels = 15;
 
     return (
         <main className="flex flex-col gap-6 h-screen w-screen items-center justify-center p-12 text-3xl">
@@ -15,7 +16,7 @@ export default async function Home() {
             <div className="mt-6">
                 <h2 className="font-extralight mb-6">levels</h2>
                 <div className="grid grid-cols-4 grid-rows-4 gap-6">
-                    {[...Array(numLevels)].map((_, i) => (
+                    {[...Array(NUM_LEVELS)].map((_, i) => (
                         <Link key={i} href={`/${i + 1}`}>
                             {i + 1}
                         </Link>

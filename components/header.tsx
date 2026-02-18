@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Level } from "@/lib/level";
+import { Level, NUM_LEVELS } from "@/lib/level";
 
 export default function Header({
     levelNum,
@@ -38,7 +38,11 @@ export default function Header({
                         // </Button> */}
                     <Link
                         className={`text-3xl p-2 ${levelCompleted ? "visible" : "invisible"}`}
-                        href={`/${levelNum + 1}`}
+                        href={
+                            levelNum === NUM_LEVELS
+                                ? "/end"
+                                : `/${levelNum + 1}`
+                        }
                     >
                         next
                     </Link>
