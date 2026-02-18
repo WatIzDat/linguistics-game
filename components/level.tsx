@@ -4,7 +4,7 @@ import { Rule, applyRules, formatRule } from "@/lib/rule";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider, useDroppable } from "@dnd-kit/react";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { Level } from "@/lib/level";
@@ -62,10 +62,12 @@ function Column({
 
 export default function LevelPage({
     level,
-    levelNum,
+    // levelNum,
+    setCompleted,
 }: {
     level: Level;
-    levelNum: number;
+    // levelNum: number;
+    setCompleted: Dispatch<SetStateAction<boolean>>;
 }) {
     // const rules = [
     //     { id: 0, rule: { pattern: "p", replacement: "f" } },
@@ -87,7 +89,7 @@ export default function LevelPage({
     const [word, setWord] = useState(initialWord);
 
     const [success, setSuccess] = useState(false);
-    const [completed, setCompleted] = useState(false);
+    // const [completed, setCompleted] = useState(false);
 
     useEffect(() => {
         const newWord = applyRules(
@@ -110,10 +112,10 @@ export default function LevelPage({
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="flex h-screen w-screen flex-col gap-12 items-center justify-between bg-neutral-100 p-12 sm:items-start">
+            <main className="flex h-full w-full flex-col gap-12 items-center justify-between bg-background p-12 sm:items-start">
                 <div className="h-1/2 w-full flex items-center justify-center">
-                    <div className="h-full w-1/2 bg-black/10 rounded-4xl">
-                        <h2 className="text-3xl font-semibold ml-6 mt-6 absolute">
+                    <div className="flex h-full w-1/2 bg-secondary rounded-4xl">
+                        <h2 className="text-3xl font-semibold ml-6 mt-6">
                             Timeline
                         </h2>
                         <Column
@@ -126,7 +128,7 @@ export default function LevelPage({
                                     id={rule.id}
                                     index={i}
                                     group="solution"
-                                    className="h-1/4 w-1/3 text-3xl font-light"
+                                    className="h-1/8 w-1/6 text-lg"
                                 >
                                     {formatRule(rule.rule)}
                                 </SortableButton>
@@ -139,13 +141,13 @@ export default function LevelPage({
                         {word}
                     </div>
                 </div>
-                <div className="h-1/2 w-full bg-black/10 rounded-4xl">
+                <div className="h-1/2 w-full bg-secondary rounded-4xl">
                     <h2 className="text-3xl font-semibold ml-6 mt-6 absolute">
                         Changes
                     </h2>
                     <Column
                         id="bank"
-                        className="h-full w-full flex gap-4 items-center justify-center"
+                        className="h-full w-full flex flex-wrap gap-4 items-center justify-center"
                     >
                         {items.bank.map((rule, i) => (
                             <SortableButton
@@ -153,21 +155,21 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="h-1/4 w-1/6 text-3xl font-light"
+                                className="h-1/8 w-1/12 text-lg"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
                         ))}
                     </Column>
                 </div>
-                {completed && (
+                {/* {completed && (
                     <Button
                         className="ml-auto bg-blue-500 w-20 h-12"
                         onClick={() => (location.href = `/${levelNum + 1}`)}
                     >
                         Next
                     </Button>
-                )}
+                )} */}
             </main>
         </DragDropProvider>
     );

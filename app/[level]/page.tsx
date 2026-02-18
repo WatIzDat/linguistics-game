@@ -1,5 +1,9 @@
+import Header from "@/components/header";
 import LevelPage from "@/components/level";
+import LevelLayout from "@/components/level-layout";
+import { Button } from "@/components/ui/button";
 import { Level } from "@/lib/level";
+import Link from "next/link";
 
 export default async function Page({
     params,
@@ -16,5 +20,5 @@ export default async function Page({
 
     console.log(level);
 
-    return <LevelPage level={level} levelNum={Number.parseInt(levelNum)} />;
+    return <LevelLayout level={level} levelNum={levelNum} />;
 }
