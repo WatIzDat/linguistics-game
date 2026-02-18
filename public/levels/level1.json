@@ -3,6 +3,6 @@
     "targetWord": "fader",
     "rules": [
         { "pattern": "p", "replacement": "f" },
-        { "pattern": "t", "replacement": "d" }
+        { "pattern": "t", "replacement": "d", "environment": "a _" }
     ]
 }
