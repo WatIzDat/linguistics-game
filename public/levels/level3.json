@@ -1,0 +1,9 @@
+{
+    "name": "environments",
+    "initialWord": "peter",
+    "targetWord": "pitar",
+    "rules": [
+        { "pattern": "e", "replacement": "i", "environment": "p _ t" },
+        { "pattern": "e", "replacement": "a", "environment": "t _ r" }
+    ]
+}

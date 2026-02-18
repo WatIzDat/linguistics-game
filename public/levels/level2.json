@@ -7,14 +7,6 @@
         { "pattern": "a", "replacement": "e" },
         { "pattern": "e", "replacement": "i" },
         { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
-        { "pattern": "e", "replacement": "i" },
         { "pattern": "i", "replacement": "a" }
     ]
 }

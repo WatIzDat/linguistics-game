@@ -1,0 +1,12 @@
+{
+    "name": "take care of the environment",
+    "initialWord": "pater",
+    "targetWord": "fader",
+    "rules": [
+        { "pattern": "p", "replacement": "f", "environment": "_ i" },
+        { "pattern": "a", "replacement": "e" },
+        { "pattern": "e", "replacement": "i", "environment": "_ d" },
+        { "pattern": "t", "replacement": "d", "environment": "e _" },
+        { "pattern": "i", "replacement": "a" }
+    ]
+}

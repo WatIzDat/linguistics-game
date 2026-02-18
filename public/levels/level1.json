@@ -3,7 +3,7 @@
     "initialWord": "pater",
     "targetWord": "fader",
     "rules": [
-        { "pattern": "p", "replacement": "f", "environment": "# _ ader" },
-        { "pattern": "t", "replacement": "d", "environment": "#pa _ er#" }
+        { "pattern": "p", "replacement": "f" },
+        { "pattern": "t", "replacement": "d" }
     ]
 }
