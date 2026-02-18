@@ -24,10 +24,10 @@ export default function Header({
                 <header className="flex flex-col items-center text-lg">
                     <h1 className="font-bold text-4xl">Level {levelNum}</h1>
                     <p>{level.name}</p>
-                    <p>
+                    {/* <p>
                         <span className="font-bold">Goal:</span>{" "}
                         {level.initialWord} → {level.targetWord}
-                    </p>
+                    </p> */}
                 </header>
                 <div className="flex gap-4 text-lg">
                     {/* // <Button

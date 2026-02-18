@@ -136,9 +136,13 @@ export default function LevelPage({
                         </Column>
                     </div>
                     <div
-                        className={`h-full w-1/2 flex items-center justify-center text-9xl font-bold ${success && "text-green-500"}`}
+                        className={`h-full w-1/2 flex flex-col gap-4 items-center justify-center text-9xl font-bold ${success && "text-green-500"}`}
                     >
                         {word}
+                        <div className="text-lg font-normal">
+                            <span className="font-bold">Goal:</span>{" "}
+                            {level.initialWord} → {level.targetWord}
+                        </div>
                     </div>
                 </div>
                 <div className="flex flex-col h-1/2 w-full bg-secondary rounded-4xl">
