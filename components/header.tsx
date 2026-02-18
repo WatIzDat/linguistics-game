@@ -5,9 +5,11 @@ import { Button } from "./ui/button";
 
 export default function Header({
     levelNum,
+    levelName,
     levelCompleted,
 }: {
     levelNum: number;
+    levelName: string;
     levelCompleted: boolean;
 }) {
     return (
@@ -18,21 +20,23 @@ export default function Header({
                         chain→ling
                     </Link>
                 </nav>
+                <header className="flex flex-col items-center text-lg">
+                    <h1 className="font-bold text-4xl">Level {levelNum}</h1>
+                    <p>{levelName}</p>
+                </header>
                 <div className="flex gap-4 text-lg">
-                    {levelCompleted && (
-                        // <Button
+                    {/* // <Button
                         //     className="bg-blue-500"
                         //     onClick={() => (location.href = `/${levelNum + 1}`)}
                         // >
                         //     Next
-                        // </Button>
-                        <Link
-                            className="text-3xl p-2"
-                            href={`/${levelNum + 1}`}
-                        >
-                            next
-                        </Link>
-                    )}
+                        // </Button> */}
+                    <Link
+                        className={`text-3xl p-2 ${levelCompleted ? "visible" : "invisible"}`}
+                        href={`/${levelNum + 1}`}
+                    >
+                        next
+                    </Link>
                 </div>
             </div>
         </div>

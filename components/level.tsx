@@ -128,7 +128,7 @@ export default function LevelPage({
                                     id={rule.id}
                                     index={i}
                                     group="solution"
-                                    className="h-1/8 w-1/6 text-lg"
+                                    className="h-15 w-50 text-lg"
                                 >
                                     {formatRule(rule.rule)}
                                 </SortableButton>
@@ -141,8 +141,8 @@ export default function LevelPage({
                         {word}
                     </div>
                 </div>
-                <div className="h-1/2 w-full bg-secondary rounded-4xl">
-                    <h2 className="text-3xl font-semibold ml-6 mt-6 absolute">
+                <div className="flex flex-col h-1/2 w-full bg-secondary rounded-4xl">
+                    <h2 className="text-3xl font-semibold ml-6 mt-6">
                         Changes
                     </h2>
                     <Column
@@ -155,7 +155,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="h-1/8 w-1/12 text-lg"
+                                className="h-15 w-50 text-lg"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
