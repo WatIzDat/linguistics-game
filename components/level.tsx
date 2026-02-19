@@ -8,6 +8,7 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { Level, NUM_LEVELS } from "@/lib/level";
+import { clearTimeout, setTimeout } from "timers";
 
 function SortableButton({
     children,
@@ -91,6 +92,8 @@ export default function LevelPage({
     const [success, setSuccess] = useState(false);
     // const [completed, setCompleted] = useState(false);
 
+    const [timeoutID, setTimeoutID] = useState<NodeJS.Timeout | null>(null);
+
     useEffect(() => {
         const newWord = applyRules(
             items.solution.map((x) => x.rule),
@@ -99,15 +102,30 @@ export default function LevelPage({
 
         setWord(newWord);
 
-        setSuccess(newWord === targetWord);
-
         if (newWord === targetWord) {
-            setCompleted(true);
+            setTimeoutID(
+                setTimeout(() => {
+                    setSuccess(true);
 
-            if (levelNum === NUM_LEVELS) {
-                localStorage.removeItem("level");
-            } else {
-                localStorage.setItem("level", (levelNum + 1).toString());
+                    setCompleted(true);
+
+                    if (levelNum === NUM_LEVELS) {
+                        localStorage.removeItem("level");
+                    } else {
+                        localStorage.setItem(
+                            "level",
+                            (levelNum + 1).toString(),
+                        );
+                    }
+                }, 1000),
+            );
+        } else {
+            setSuccess(false);
+
+            if (timeoutID) {
+                clearTimeout(timeoutID);
+
+                setTimeoutID(null);
             }
         }
     }, [items]);
