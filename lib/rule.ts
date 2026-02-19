@@ -4,6 +4,21 @@ export interface Rule {
     environment?: string | null;
 }
 
+const naturalClassToRegex: { [k: string]: string } = {
+    C: "[ptkbdgmn]",
+    V: "[aeiou]",
+    "[+voice]": "[bdgmn]",
+    "[-voice]": "[ptk]",
+    "[+nasal]": "[mn]",
+    "[-nasal]": "[ptkbdg]",
+    "[+high]": "[iu]",
+    "[-high]": "[aeo]",
+    "[+mid]": "[eo]",
+    "[-mid]": "[aiu]",
+    "[+low]": "[a]",
+    "[-low]": "[eiou]",
+};
+
 export function applyRule(rule: Rule, word: string): string {
     if (!rule.environment) {
         return word.replaceAll(rule.pattern, rule.replacement);
@@ -55,7 +70,18 @@ export function applyRule(rule: Rule, word: string): string {
     //     }
     // }
 
+    const naturalClassRe = new RegExp("\\[.*\\]|C|V", "g");
+
     if (environment[0]) {
+        console.log([...environment[0].matchAll(naturalClassRe)]);
+
+        [...environment[0].matchAll(naturalClassRe)].map((match) => {
+            environment[0] = environment[0]!.replace(
+                match[0],
+                naturalClassToRegex[match[0]],
+            );
+        });
+
         if (environment[0][0] === "#") {
             if (environment[0].length > 1) {
                 left = `(?<=^${environment[0].substring(1)})`;
@@ -68,6 +94,13 @@ export function applyRule(rule: Rule, word: string): string {
     }
 
     if (environment[2]) {
+        [...environment[2].matchAll(naturalClassRe)].map((match) => {
+            environment[2] = environment[2]!.replace(
+                match[0],
+                naturalClassToRegex[match[0]],
+            );
+        });
+
         if (environment[2][environment[2].length - 1] === "#") {
             if (environment[2].length > 1) {
                 right = `(?=${environment[2].substring(0, environment[2].length - 1)}$)`;
