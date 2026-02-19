@@ -7,6 +7,8 @@
         { "pattern": "a", "replacement": "e" },
         { "pattern": "e", "replacement": "i", "environment": "_ d" },
         { "pattern": "t", "replacement": "d", "environment": "e _" },
+        { "pattern": "i", "replacement": "a" },
+        { "pattern": "i", "replacement": "a" },
         { "pattern": "i", "replacement": "a" }
     ]
 }

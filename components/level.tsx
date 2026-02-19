@@ -118,10 +118,10 @@ export default function LevelPage({
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="grid grid-cols-2 grid-rows-2 h-full w-full gap-12 bg-background p-12 sm:items-start">
+            <main className="grid grid-cols-2 grid-rows-4 gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
                 {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
-                <div className="col-start-1 col-end-2 flex h-full bg-secondary rounded-4xl">
-                    <h2 className="text-3xl font-semibold ml-6 mt-6">
+                <div className="col-start-1 col-end-2 row-start-2 row-end-5 lg:row-start-1 lg:row-end-3 flex flex-col gap-4 lg:flex-row h-full bg-secondary rounded-4xl">
+                    <h2 className="text-3xl font-semibold text-center lg:ml-6 mt-6">
                         Timeline
                     </h2>
                     <Column
@@ -134,7 +134,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="h-15 w-50 text-lg"
+                                className="size-auto p-2 md:p-4 lg:p-6 text-lg"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
@@ -142,7 +142,7 @@ export default function LevelPage({
                     </Column>
                 </div>
                 <div
-                    className={`col-start-2 col-end-3 flex flex-col gap-4 h-full items-center justify-center text-9xl font-bold ${success && "text-green-500"}`}
+                    className={`col-start-1 col-end-3 row-start-1 row-end-2 lg:row-end-3 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
                 >
                     {word}
                     <div className="text-lg font-normal">
@@ -151,13 +151,13 @@ export default function LevelPage({
                     </div>
                 </div>
                 {/* </div> */}
-                <div className="col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col h-full bg-secondary rounded-4xl">
-                    <h2 className="text-3xl font-semibold ml-6 mt-6">
+                <div className="col-start-2 lg:col-start-1 col-end-3 row-start-2 lg:row-start-3 row-end-5 flex flex-col gap-4 h-full bg-secondary rounded-4xl">
+                    <h2 className="text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                         Changes
                     </h2>
                     <Column
                         id="bank"
-                        className="h-full w-full flex flex-wrap gap-4 items-center justify-center"
+                        className="h-full w-full flex flex-col lg:flex-row flex-wrap overflow-scroll gap-4 items-center justify-center"
                     >
                         {items.bank.map((rule, i) => (
                             <SortableButton
@@ -165,7 +165,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="h-15 w-50 text-lg"
+                                className="size-auto p-2 md:p-4 lg:p-6 text-lg"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>

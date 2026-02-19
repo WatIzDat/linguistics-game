@@ -15,7 +15,7 @@ export default function Header({
 }) {
     return (
         <div>
-            <div className="flex items-center justify-between px-12 pt-12">
+            <div className="flex flex-col lg:flex-row items-center justify-between px-12 pt-12">
                 <nav className="flex gap-4 text-lg">
                     <Link className="text-5xl p-2 font-light" href="/">
                         chain→ling
