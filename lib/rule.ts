@@ -127,6 +127,6 @@ export function applyRules(rules: Rule[], word: string): string {
 
 export function formatRule(rule: Rule): string {
     return rule.environment
-        ? `${rule.pattern} → ${rule.replacement} / ${rule.environment}`
-        : `${rule.pattern} → ${rule.replacement}`;
+        ? `${rule.pattern || "∅"} → ${rule.replacement || "∅"} / ${rule.environment}`
+        : `${rule.pattern || "∅"} → ${rule.replacement || "∅"}`;
 }

@@ -1,0 +1,14 @@
+{
+    "name": "deletion and insertion",
+    "initialWord": "gate",
+    "targetWord": "gade",
+    "rules": [
+        { "pattern": "a", "replacement": "" },
+        {
+            "pattern": "",
+            "replacement": "a",
+            "environment": "[+voice] _ [+voice]"
+        },
+        { "pattern": "t", "replacement": "d", "environment": "C _" }
+    ]
+}
