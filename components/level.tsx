@@ -118,40 +118,40 @@ export default function LevelPage({
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="flex h-full w-full flex-col gap-12 items-center justify-between bg-background p-12 sm:items-start">
-                <div className="h-1/2 w-full flex items-center justify-center">
-                    <div className="flex h-full w-1/2 bg-secondary rounded-4xl">
-                        <h2 className="text-3xl font-semibold ml-6 mt-6">
-                            Timeline
-                        </h2>
-                        <Column
-                            id="solution"
-                            className="h-full w-full flex flex-col items-center justify-center gap-4 flex-wrap"
-                        >
-                            {items.solution.map((rule, i) => (
-                                <SortableButton
-                                    key={rule.id}
-                                    id={rule.id}
-                                    index={i}
-                                    group="solution"
-                                    className="h-15 w-50 text-lg"
-                                >
-                                    {formatRule(rule.rule)}
-                                </SortableButton>
-                            ))}
-                        </Column>
-                    </div>
-                    <div
-                        className={`h-full w-1/2 flex flex-col gap-4 items-center justify-center text-9xl font-bold ${success && "text-green-500"}`}
+            <main className="grid grid-cols-2 grid-rows-2 h-full w-full gap-12 bg-background p-12 sm:items-start">
+                {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
+                <div className="col-start-1 col-end-2 flex h-full bg-secondary rounded-4xl">
+                    <h2 className="text-3xl font-semibold ml-6 mt-6">
+                        Timeline
+                    </h2>
+                    <Column
+                        id="solution"
+                        className="h-full w-full flex flex-col items-center justify-center gap-4 flex-wrap"
                     >
-                        {word}
-                        <div className="text-lg font-normal">
-                            <span className="font-bold">Goal:</span>{" "}
-                            {level.initialWord} → {level.targetWord}
-                        </div>
+                        {items.solution.map((rule, i) => (
+                            <SortableButton
+                                key={rule.id}
+                                id={rule.id}
+                                index={i}
+                                group="solution"
+                                className="h-15 w-50 text-lg"
+                            >
+                                {formatRule(rule.rule)}
+                            </SortableButton>
+                        ))}
+                    </Column>
+                </div>
+                <div
+                    className={`col-start-2 col-end-3 flex flex-col gap-4 h-full items-center justify-center text-9xl font-bold ${success && "text-green-500"}`}
+                >
+                    {word}
+                    <div className="text-lg font-normal">
+                        <span className="font-bold">Goal:</span>{" "}
+                        {level.initialWord} → {level.targetWord}
                     </div>
                 </div>
-                <div className="flex flex-col h-1/2 w-full bg-secondary rounded-4xl">
+                {/* </div> */}
+                <div className="col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col h-full bg-secondary rounded-4xl">
                     <h2 className="text-3xl font-semibold ml-6 mt-6">
                         Changes
                     </h2>

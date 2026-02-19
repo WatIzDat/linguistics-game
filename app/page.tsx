@@ -16,7 +16,9 @@ export default async function Home() {
             <PlayLink />
             <div className="mt-6">
                 <h2 className="font-extralight mb-6">levels</h2>
-                <div className="grid grid-cols-4 grid-rows-4 gap-6">
+                <div
+                    className={`grid grid-cols-4 grid-rows-${Math.ceil(NUM_LEVELS / 4)} gap-6`}
+                >
                     {[...Array(NUM_LEVELS)].map((_, i) => (
                         <Link key={i} href={`/${i + 1}`}>
                             {i + 1}
