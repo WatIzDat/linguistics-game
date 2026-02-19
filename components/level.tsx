@@ -7,7 +7,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
-import { Level } from "@/lib/level";
+import { Level, NUM_LEVELS } from "@/lib/level";
 
 function SortableButton({
     children,
@@ -62,11 +62,11 @@ function Column({
 
 export default function LevelPage({
     level,
-    // levelNum,
+    levelNum,
     setCompleted,
 }: {
     level: Level;
-    // levelNum: number;
+    levelNum: number;
     setCompleted: Dispatch<SetStateAction<boolean>>;
 }) {
     // const rules = [
@@ -103,6 +103,12 @@ export default function LevelPage({
 
         if (newWord === targetWord) {
             setCompleted(true);
+
+            if (levelNum === NUM_LEVELS) {
+                localStorage.removeItem("level");
+            } else {
+                localStorage.setItem("level", (levelNum + 1).toString());
+            }
         }
     }, [items]);
 

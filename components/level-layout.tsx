@@ -21,7 +21,11 @@ export default function LevelLayout({
                 level={level}
                 levelCompleted={completed}
             />
-            <LevelPage level={level} setCompleted={setCompleted} />
+            <LevelPage
+                levelNum={Number.parseInt(levelNum)}
+                level={level}
+                setCompleted={setCompleted}
+            />
         </div>
     );
 }

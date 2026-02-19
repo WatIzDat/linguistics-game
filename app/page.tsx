@@ -1,3 +1,4 @@
+import PlayLink from "@/components/play-link";
 import { NUM_LEVELS } from "@/lib/level";
 import Link from "next/link";
 
@@ -12,7 +13,7 @@ export default async function Home() {
                     the puzzle game about sound change
                 </p>
             </header>
-            <Link href="/1">play</Link>
+            <PlayLink />
             <div className="mt-6">
                 <h2 className="font-extralight mb-6">levels</h2>
                 <div className="grid grid-cols-4 grid-rows-4 gap-6">
