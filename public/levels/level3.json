@@ -1,9 +1,11 @@
 {
     "name": "environments",
-    "initialWord": "peter",
-    "targetWord": "pitar",
+    "initialWord": "meet",
+    "targetWord": "neat",
     "rules": [
-        { "pattern": "e", "replacement": "i", "environment": "p _ t" },
-        { "pattern": "e", "replacement": "a", "environment": "t _ r" }
+        { "pattern": "m", "replacement": "n", "environment": "_ i" },
+        { "pattern": "e", "replacement": "i" },
+        { "pattern": "i", "replacement": "e" },
+        { "pattern": "e", "replacement": "a", "environment": "e _ t" }
     ]
 }

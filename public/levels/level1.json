@@ -1,9 +1,9 @@
 {
     "name": "humble beginnings",
-    "initialWord": "pater",
-    "targetWord": "fader",
+    "initialWord": "pet",
+    "targetWord": "bed",
     "rules": [
-        { "pattern": "p", "replacement": "f" },
+        { "pattern": "p", "replacement": "b" },
         { "pattern": "t", "replacement": "d" }
     ]
 }

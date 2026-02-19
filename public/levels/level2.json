@@ -1,7 +1,7 @@
 {
     "name": "order matters",
-    "initialWord": "pater",
-    "targetWord": "piter",
+    "initialWord": "kate",
+    "targetWord": "kite",
     "rules": [
         { "pattern": "a", "replacement": "e" },
         { "pattern": "a", "replacement": "e" },
