@@ -152,7 +152,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="size-auto p-2 md:p-4 lg:p-6 text-lg"
+                                className="size-auto p-2 md:p-4 lg:p-6 text-lg select-none"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
@@ -183,7 +183,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="size-auto p-2 md:p-4 lg:p-6 text-lg"
+                                className="size-auto p-2 md:p-4 lg:p-6 text-lg select-none"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
