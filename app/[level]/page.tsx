@@ -13,7 +13,7 @@ export default async function Page({
     const { level: levelNum } = await params;
 
     const response = await fetch(
-        `http://localhost:3000/levels/level${levelNum}.json`,
+        `${process.env.BASE_URL}/levels/level${levelNum}.json`,
     );
 
     const level: Level = await response.json();
