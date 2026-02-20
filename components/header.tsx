@@ -15,7 +15,7 @@ export default function Header({
 }) {
     return (
         <div>
-            <div className="flex flex-col lg:flex-row items-center justify-between px-12 pt-12">
+            <div className="flex flex-col lg:grid lg:grid-cols-3 items-center justify-between px-12 pt-12">
                 <nav className="flex gap-4 text-lg">
                     <Link className="text-5xl p-2 font-light" href="/">
                         chain→ling
@@ -29,7 +29,7 @@ export default function Header({
                         {level.initialWord} → {level.targetWord}
                     </p> */}
                 </header>
-                <div className="flex gap-4 text-lg">
+                <div className="flex flex-row-reverse gap-4 text-lg">
                     {/* // <Button
                         //     className="bg-blue-500"
                         //     onClick={() => (location.href = `/${levelNum + 1}`)}
