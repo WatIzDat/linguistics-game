@@ -2,8 +2,8 @@
 
 import { Rule, applyRules, formatRule } from "@/lib/rule";
 import { move } from "@dnd-kit/helpers";
-import { DragDropProvider, useDroppable } from "@dnd-kit/react";
-import { useSortable } from "@dnd-kit/react/sortable";
+import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
+import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import {
     useState,
     useEffect,
@@ -12,6 +12,7 @@ import {
     useRef,
     RefObject,
     CSSProperties,
+    Fragment,
 } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
@@ -63,6 +64,26 @@ function SortableButton({
     );
 }
 
+// function UnsortableButton({
+//     children,
+//     id,
+//     className,
+//     style,
+// }: {
+//     children: React.ReactNode;
+//     id: number;
+//     className?: string;
+//     style?: CSSProperties;
+// }) {
+//     const { ref } = useDraggable({ id });
+
+//     return (
+//         <Button ref={ref} className={className} style={style}>
+//             {children}
+//         </Button>
+//     );
+// }
+
 function Column({
     ref,
     style,
@@ -99,16 +120,21 @@ function Column({
 }
 
 function Slot({ index }: { index: number }) {
-    const { ref } = useDroppable({ id: `slot-${index}` });
+    const { ref } = useDroppable({
+        id: `slot-${index}`,
+        type: "column",
+        accept: "item",
+        collisionPriority: CollisionPriority.High,
+    });
 
     return (
         <div
             ref={ref}
-            className="size-full bg-input rounded-xl text-center content-center text-muted-foreground select-none"
-            style={{
-                gridRowStart: (index % 5) + 1,
-                gridColumnStart: index / 5 + 1,
-            }}
+            className="row-start-1 col-start-1 size-full bg-input rounded-xl text-center content-center text-muted-foreground select-none"
+            // style={{
+            //     gridRowStart: (index % 5) + 1,
+            //     gridColumnStart: index / 5 + 1,
+            // }}
         >
             {index}
         </div>
@@ -199,15 +225,39 @@ export default function LevelPage({
     //     setTimelineHeight(timelineRef.current?.clientHeight!);
     // });
 
+    // const snapshot = useRef(structuredClone(items));
+
     return (
         <DragDropProvider
-            // onDragOver={(event) => {
-            //     setItems((items) => move(items, event));
-            // }}
-            onDragEnd={(event) => {
-                if (!event.operation.source) {
-                    return;
+            onDragOver={(event) => {
+                event.preventDefault();
+                if (isSortable(event.operation.source)) {
+                    console.log(event.operation.source.initialGroup);
+                    console.log(event.operation.source.group);
+                    if (
+                        event.operation.source.initialGroup !== "bank" ||
+                        event.operation.source.group !== "bank"
+                    ) {
+                        console.log("returned");
+                        event.preventDefault();
+                        return;
+                    }
                 }
+
+                setItems((items) => move(items, event));
+            }}
+            // onDragStart={() => (snapshot.current = structuredClone(items))}
+            onDragEnd={(event) => {
+                // if (!event.operation.source) {
+                //     return;
+                // }
+
+                console.log("test");
+
+                // if (event.canceled) {
+                //     setItems(snapshot.current);
+                //     return;
+                // }
 
                 if (event.operation.target?.id.toString().startsWith("slot")) {
                     const ruleIndex = items.bank.findIndex(
@@ -262,8 +312,35 @@ export default function LevelPage({
                     setItems(newItems);
 
                     console.log(newItems);
-                } else {
                 }
+                // else {
+                //     if (isSortable(event.operation.source)) {
+                //         const { initialIndex, index, initialGroup, group } =
+                //             event.operation.source;
+
+                //         if (!initialGroup || !group) {
+                //             return;
+                //         }
+
+                //         if (initialGroup === group) {
+                //             if (group === "bank") {
+                //                 const groupItems = [...items[group]];
+                //                 const [removed] = groupItems.splice(
+                //                     initialIndex,
+                //                     1,
+                //                 );
+                //                 groupItems.splice(index, 0, removed);
+
+                //                 console.log(initialIndex);
+                //                 console.log(index);
+                //                 console.log(removed);
+                //                 console.log(groupItems);
+
+                //                 setItems({ ...items, [group]: groupItems });
+                //             }
+                //         }
+                //     }
+                // }
             }}
         >
             <main className="grid grid-cols-2 grid-rows-4 gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
@@ -283,25 +360,43 @@ export default function LevelPage({
                             )}, 1fr)`,
                         }}
                     >
-                        {rules.map((rule, i) =>
-                            items.solution[i] ? (
-                                <SortableButton
-                                    // ref={i === 0 ? ruleButtonRef : undefined}
-                                    key={items.solution[i].id}
-                                    id={items.solution[i].id}
-                                    index={i}
-                                    group="solution"
-                                    className="size-full p-2 md:p-4 lg:p-6 text-lg select-none"
+                        {rules.map(
+                            (rule, i) => (
+                                <div
+                                    key={rule.id}
+                                    className="grid grid-rows-1 grid-cols-1"
                                     style={{
                                         gridRowStart: (i % 5) + 1,
                                         gridColumnStart: i / 5 + 1,
                                     }}
                                 >
-                                    {formatRule(items.solution[i].rule)}
-                                </SortableButton>
-                            ) : (
-                                <Slot index={i} key={`slot-${rule.id}`} />
+                                    <Slot index={i} />
+                                    {items.solution[i] && (
+                                        <SortableButton
+                                            // ref={i === 0 ? ruleButtonRef : undefined}
+                                            // key={items.solution[i].id}
+                                            id={items.solution[i].id}
+                                            index={
+                                                items.solution
+                                                    .slice(0, i)
+                                                    .filter((rule) => rule)
+                                                    .length
+                                            }
+                                            group="solution"
+                                            className="row-start-1 col-start-1 size-full p-2 md:p-4 lg:p-6 text-lg select-none"
+                                            // style={{
+                                            //     gridRowStart: (i % 5) + 1,
+                                            //     gridColumnStart: i / 5 + 1,
+                                            // }}
+                                        >
+                                            {formatRule(items.solution[i].rule)}
+                                        </SortableButton>
+                                    )}
+                                </div>
                             ),
+                            // : (
+                            //     <Slot index={i} key={`slot-${rule.id}`} />
+                            // ),
                         )}
                     </div>
 
