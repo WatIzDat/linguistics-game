@@ -4,26 +4,35 @@ import { Rule, applyRules, formatRule } from "@/lib/rule";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider, useDroppable } from "@dnd-kit/react";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import {
+    useState,
+    useEffect,
+    Dispatch,
+    SetStateAction,
+    useRef,
+    RefObject,
+} from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { Level, NUM_LEVELS } from "@/lib/level";
 import { clearTimeout, setTimeout } from "timers";
 
 function SortableButton({
+    ref,
     children,
     id,
     index,
     group,
     className,
 }: {
+    ref?: RefObject<Element | null>;
     children: React.ReactNode;
     id: number;
     index: number;
     group: string;
     className?: string;
 }) {
-    const { ref, isDragging } = useSortable({
+    const { ref: sortableRef, isDragging } = useSortable({
         id,
         index,
         type: "item",
@@ -31,8 +40,16 @@ function SortableButton({
         group,
     });
 
+    function refs(node: Element | null) {
+        sortableRef(node);
+
+        if (ref) {
+            ref.current = node;
+        }
+    }
+
     return (
-        <Button ref={ref} className={className} data-dragging={isDragging}>
+        <Button ref={refs} className={className} data-dragging={isDragging}>
             {children}
         </Button>
     );
@@ -130,6 +147,20 @@ export default function LevelPage({
         }
     }, [items]);
 
+    const [ruleButtonHeight, setRuleButtonHeight] = useState(0);
+    const ruleButtonRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        setRuleButtonHeight(ruleButtonRef.current?.clientHeight!);
+    });
+
+    const [timelineHeight, setTimelineHeight] = useState(0);
+    const timelineRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        setTimelineHeight(timelineRef.current?.clientHeight!);
+    });
+
     return (
         <DragDropProvider
             onDragOver={(event) => {
@@ -144,15 +175,16 @@ export default function LevelPage({
                     </h2>
                     <Column
                         id="solution"
-                        className="h-full w-full flex flex-col items-center justify-center gap-4 flex-wrap"
+                        className={`h-full max-h-[${timelineHeight}px] w-full grid grid-rows-[repeat(auto-fill,${ruleButtonHeight}px)] grid-cols-2 place-items-center`}
                     >
                         {items.solution.map((rule, i) => (
                             <SortableButton
+                                ref={i === 0 ? ruleButtonRef : undefined}
                                 key={rule.id}
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="size-auto p-2 md:p-4 lg:p-6 text-lg select-none"
+                                className="size-fit p-2 md:p-4 lg:p-6 text-lg select-none gr"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
@@ -179,11 +211,12 @@ export default function LevelPage({
                     >
                         {items.bank.map((rule, i) => (
                             <SortableButton
+                                ref={i === 0 ? ruleButtonRef : undefined}
                                 key={rule.id}
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="size-auto p-2 md:p-4 lg:p-6 text-lg select-none"
+                                className="size-fit p-2 md:p-4 lg:p-6 text-lg select-none"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
