@@ -1,0 +1,15 @@
+{
+    "name": "detour",
+    "initialWord": "start",
+    "targetWord": "end",
+    "rules": [
+        { "pattern": "t", "replacement": "d", "environment": "_ V" },
+        { "pattern": "s", "replacement": "e", "environment": "C _" },
+        { "pattern": "da", "replacement": "end", "environment": "detour _" },
+        { "pattern": "", "replacement": "t", "environment": "# _" },
+        { "pattern": "", "replacement": "a", "environment": "_ #" },
+        { "pattern": "", "replacement": "ou", "environment": "t _ r" },
+        { "pattern": "a", "replacement": "" },
+        { "pattern": "detour", "replacement": "" }
+    ]
+}
