@@ -20,8 +20,20 @@ const naturalClassToRegex: { [k: string]: string } = {
 };
 
 export function applyRule(rule: Rule, word: string): string {
+    const naturalClassRe = new RegExp("\\[.*\\]|C|V", "g");
+
     if (!rule.environment) {
-        return word.replaceAll(rule.pattern, rule.replacement);
+        let reStr = rule.pattern;
+
+        [...reStr.matchAll(naturalClassRe)].map((match) => {
+            reStr = reStr.replace(match[0], naturalClassToRegex[match[0]]);
+        });
+
+        const re = new RegExp(reStr, "g");
+
+        console.log(re);
+
+        return word.replaceAll(re, rule.replacement);
     }
 
     const environment: (string | null)[] = rule.environment.split(" ");
@@ -70,7 +82,7 @@ export function applyRule(rule: Rule, word: string): string {
     //     }
     // }
 
-    const naturalClassRe = new RegExp("\\[.*\\]|C|V", "g");
+    // const naturalClassRe = new RegExp("\\[.*\\]|C|V", "g");
 
     if (environment[0]) {
         console.log([...environment[0].matchAll(naturalClassRe)]);

@@ -1,6 +1,6 @@
 import { Rule } from "./rule";
 
-export const NUM_LEVELS = 8;
+export const NUM_LEVELS = 10;
 
 export interface Level {
     name: string;
