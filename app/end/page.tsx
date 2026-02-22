@@ -2,9 +2,11 @@ import Link from "next/link";
 
 export default function Page() {
     return (
-        <main className="flex flex-col gap-6 h-screen w-screen items-center justify-center p-12 text-3xl">
-            <header className="text-center">
-                <h1 className="text-9xl font-light mb-6">congrats!</h1>
+        <main className="flex flex-col gap-6 h-screen w-screen items-center justify-center p-12 text-3xl text-center">
+            <header>
+                <h1 className="text-7xl md:text-8xl lg:text-9xl font-light mb-6">
+                    congrats!
+                </h1>
                 <p className="font-extralight">
                     you have completed all levels :)
                 </p>

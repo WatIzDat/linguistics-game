@@ -8,7 +8,9 @@ export default async function Home() {
     return (
         <main className="flex flex-col gap-6 h-screen w-screen items-center justify-center p-12 text-3xl">
             <header className="text-center">
-                <h1 className="text-9xl font-light mb-6">chain→ling</h1>
+                <h1 className="text-7xl md:text-8xl lg:text-9xl font-light mb-6">
+                    chain→ling
+                </h1>
                 <p className="font-extralight">
                     the puzzle game about sound change
                 </p>
