@@ -472,7 +472,7 @@ export default function LevelPage({
 
                     <Column
                         id="solution"
-                        className="size-full grid grid-rows-5 gap-4 p-4 grid-flow-col"
+                        className="size-full max-h-[50vh] flex flex-col gap-4 p-4 items-center justify-center lg:grid lg:grid-rows-5 lg:grid-flow-col overflow-scroll"
                         style={{
                             gridTemplateColumns: `repeat(${Math.ceil(
                                 level.rules.length / 5,
@@ -486,7 +486,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="size-full p-2 md:p-4 lg:p-6 text-lg select-none"
+                                className="size-fit lg:size-full text-base @md:text-lg select-none"
                                 // style={{
                                 //     gridRowStart: (i % 5) + 1,
                                 //     gridColumnStart: i / 5 + 1,
@@ -513,7 +513,7 @@ export default function LevelPage({
                     </h2>
                     <Column
                         id="bank"
-                        className="h-full w-full flex flex-col lg:flex-row flex-wrap overflow-scroll gap-4 items-center justify-center"
+                        className="h-full w-full flex flex-col lg:flex-row flex-wrap overflow-scroll gap-4 p-4 items-center justify-center"
                     >
                         {items.bank.map((rule, i) => (
                             <SortableButton
