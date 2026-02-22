@@ -1,0 +1,12 @@
+{
+    "name": "confusing",
+    "initialWord": "dad",
+    "targetWord": "iti",
+    "rules": [
+        { "pattern": "d", "replacement": "t", "environment": "V _ C" },
+        { "pattern": "V", "replacement": "", "environment": "V _ V" },
+        { "pattern": "VV", "replacement": "", "environment": "_ C" },
+        { "pattern": "C", "replacement": "", "environment": "_ V" },
+        { "pattern": "", "replacement": "i" }
+    ]
+}

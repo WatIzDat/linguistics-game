@@ -75,12 +75,12 @@ export function applyRule(rule: Rule, word: string): string {
     if (environment[0]) {
         console.log([...environment[0].matchAll(naturalClassRe)]);
 
-        [...environment[0].matchAll(naturalClassRe)].map((match) => {
-            environment[0] = environment[0]!.replace(
-                match[0],
-                naturalClassToRegex[match[0]],
-            );
-        });
+        // [...environment[0].matchAll(naturalClassRe)].map((match) => {
+        //     environment[0] = environment[0]!.replace(
+        //         match[0],
+        //         naturalClassToRegex[match[0]],
+        //     );
+        // });
 
         if (environment[0][0] === "#") {
             if (environment[0].length > 1) {
@@ -94,12 +94,12 @@ export function applyRule(rule: Rule, word: string): string {
     }
 
     if (environment[2]) {
-        [...environment[2].matchAll(naturalClassRe)].map((match) => {
-            environment[2] = environment[2]!.replace(
-                match[0],
-                naturalClassToRegex[match[0]],
-            );
-        });
+        // [...environment[2].matchAll(naturalClassRe)].map((match) => {
+        //     environment[2] = environment[2]!.replace(
+        //         match[0],
+        //         naturalClassToRegex[match[0]],
+        //     );
+        // });
 
         if (environment[2][environment[2].length - 1] === "#") {
             if (environment[2].length > 1) {
@@ -112,7 +112,13 @@ export function applyRule(rule: Rule, word: string): string {
         }
     }
 
-    const re: RegExp = new RegExp(`${left}${rule.pattern}${right}`, "g");
+    let reStr = `${left}${rule.pattern}${right}`;
+
+    [...reStr.matchAll(naturalClassRe)].map((match) => {
+        reStr = reStr.replace(match[0], naturalClassToRegex[match[0]]);
+    });
+
+    const re = new RegExp(reStr, "g");
 
     console.log(re);
 

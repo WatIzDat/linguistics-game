@@ -1,0 +1,11 @@
+{
+    "name": "#linguistics",
+    "initialWord": "dad",
+    "targetWord": "dat",
+    "rules": [
+        { "pattern": "d", "replacement": "", "environment": "# _" },
+        { "pattern": "", "replacement": "a", "environment": "_ #" },
+        { "pattern": "a", "replacement": "", "environment": "# _" },
+        { "pattern": "", "replacement": "t", "environment": "_ #" }
+    ]
+}
