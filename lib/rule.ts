@@ -5,18 +5,18 @@ export interface Rule {
 }
 
 const naturalClassToRegex: { [k: string]: string } = {
-    C: "[ptkbdgmn]",
+    C: "[^aeiou]",
     V: "[aeiou]",
-    "[+voice]": "[bdgmn]",
-    "[-voice]": "[ptk]",
-    "[+nasal]": "[mn]",
-    "[-nasal]": "[ptkbdg]",
-    "[+high]": "[iu]",
-    "[-high]": "[aeo]",
-    "[+mid]": "[eo]",
-    "[-mid]": "[aiu]",
-    "[+low]": "[a]",
-    "[-low]": "[eiou]",
+    // "[+voice]": "[bdgmn]",
+    // "[-voice]": "[ptk]",
+    // "[+nasal]": "[mn]",
+    // "[-nasal]": "[ptkbdg]",
+    // "[+high]": "[iu]",
+    // "[-high]": "[aeo]",
+    // "[+mid]": "[eo]",
+    // "[-mid]": "[aiu]",
+    // "[+low]": "[a]",
+    // "[-low]": "[eiou]",
 };
 
 export function applyRule(rule: Rule, word: string): string {

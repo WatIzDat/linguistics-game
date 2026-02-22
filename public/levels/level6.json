@@ -7,7 +7,7 @@
         {
             "pattern": "",
             "replacement": "a",
-            "environment": "[+voice] _ [+voice]"
+            "environment": "g _"
         },
         { "pattern": "t", "replacement": "d", "environment": "C _" }
     ]
