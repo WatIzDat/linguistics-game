@@ -182,7 +182,11 @@ export default function LevelPage({
 
     const [timeoutID, setTimeoutID] = useState<NodeJS.Timeout | null>(null);
 
+    const [timelineHeaderVisible, setTimelineHeaderVisible] = useState(true);
+
     useEffect(() => {
+        setTimelineHeaderVisible(items.solution.length <= 0);
+
         const newWord = applyRules(
             items.solution.filter((x) => x !== null).map((x) => x.rule),
             initialWord,
@@ -237,188 +241,18 @@ export default function LevelPage({
     return (
         <DragDropProvider
             onDragOver={(event) => {
-                // event.preventDefault();
-                // if (isSortable(event.operation.source)) {
-                //     console.log(event.operation.source.initialGroup);
-                //     console.log(event.operation.source.group);
-                //     if (
-                //         event.operation.source.initialGroup !== "bank" ||
-                //         event.operation.source.group !== "bank"
-                //     ) {
-                //         console.log("returned");
-                //         event.preventDefault();
-                //         return;
-                //     }
-                // }
-
-                // setItems((items) => ({
-                //     ...items,
-                //     bank: move(items.bank, event),
-                // }));
-
                 setItems((items) => move(items, event));
             }}
-            // onDragStart={() => (snapshot.current = structuredClone(items))}
-            // onDragEnd={(event) => {
-            //     // if (!event.operation.source) {
-            //     //     return;
-            //     // }
-
-            //     console.log("test");
-
-            //     // if (event.canceled) {
-            //     //     setItems(snapshot.current);
-            //     //     return;
-            //     // }
-
-            //     if (event.operation.target?.id.toString().startsWith("slot")) {
-            //         if (!isSortable(event.operation.source)) {
-            //             return;
-            //         }
-
-            //         const ruleIndex =
-            //             event.operation.source.initialGroup === "solution"
-            //                 ? items.solution.findIndex(
-            //                       (rule) =>
-            //                           rule !== null &&
-            //                           rule.id === event.operation.source!.id,
-            //                   )
-            //                 : items.bank.findIndex(
-            //                       (rule) =>
-            //                           rule.id === event.operation.source!.id,
-            //                   );
-
-            //         if (ruleIndex === -1) {
-            //             console.error("Rule not found");
-            //         }
-
-            //         // const newItems = items;
-
-            //         // newItems.solution[
-            //         //     Number.parseInt(
-            //         //         event.operation.target.id.toString().split("-")[1],
-            //         //     )
-            //         // ] = items.bank[ruleIndex];
-
-            //         // newItems.bank.splice(ruleIndex, 1);
-
-            //         const slotIndex = Number.parseInt(
-            //             event.operation.target.id.toString().split("-")[1],
-            //         );
-
-            //         const newItems = {
-            //             bank: [...items.bank],
-            //             // event.operation.source.initialGroup === "solution"
-            //             //     ? items.bank
-            //             //     : items.solution[slotIndex] === null
-            //             //       ? items.bank.filter(
-            //             //             (_rule, i) => i !== ruleIndex,
-            //             //         )
-            //             //       : items.bank.map((rule, i) =>
-            //             //             i === ruleIndex
-            //             //                 ? items.solution[slotIndex]!
-            //             //                 : rule,
-            //             //         ),
-            //             solution: [...items.solution],
-            //             // solution: items.solution.map((rule, i) => {
-            //             //     console.log(
-            //             //         Number.parseInt(
-            //             //             event.operation
-            //             //                 .target!.id.toString()
-            //             //                 .split("-")[1],
-            //             //         ),
-            //             //     );
-            //             //     if (
-            //             //         i ===
-            //             //         Number.parseInt(
-            //             //             event.operation
-            //             //                 .target!.id.toString()
-            //             //                 .split("-")[1],
-            //             //         )
-            //             //     ) {
-            //             //         return items.bank[ruleIndex];
-            //             //     }
-
-            //             //     return rule;
-            //             // }),
-            //         };
-
-            //         newItems.solution[slotIndex] =
-            //             event.operation.source.initialGroup === "solution"
-            //                 ? items.solution[ruleIndex]
-            //                 : items.bank[ruleIndex];
-
-            //         if (event.operation.source.initialGroup === "solution") {
-            //             newItems.solution[ruleIndex] = null;
-            //         }
-
-            //         if (
-            //             event.operation.source.initialGroup === "bank"
-            //             // items.solution[slotIndex] !== null
-            //         ) {
-            //             newItems.bank.splice(ruleIndex, 1);
-
-            //             if (items.solution[slotIndex] !== null) {
-            //                 newItems.bank.splice(
-            //                     event.operation.source.index,
-            //                     0,
-            //                     items.solution[slotIndex],
-            //                 );
-            //             }
-
-            //             // const groupItems = [...items.bank];
-            //             // const [removed] = groupItems.splice(event.operation.source.initialIndex, 1);
-            //             // groupItems.splice(index, 0, removed);
-
-            //             // console.log(initialIndex);
-            //             // console.log(index);
-            //             // console.log(removed);
-            //             // console.log(groupItems);
-
-            //             // setItems({ ...items, bank: newItems.bank });
-            //         }
-
-            //         setItems(newItems);
-
-            //         console.log(newItems);
-            //     }
-            //     // else {
-            //     //     if (isSortable(event.operation.source)) {
-            //     //         const { initialIndex, index, initialGroup, group } =
-            //     //             event.operation.source;
-
-            //     //         if (!initialGroup || !group) {
-            //     //             return;
-            //     //         }
-
-            //     //         if (initialGroup === group) {
-            //     //             if (group === "bank") {
-            //     //                 const groupItems = [...items[group]];
-            //     //                 const [removed] = groupItems.splice(
-            //     //                     initialIndex,
-            //     //                     1,
-            //     //                 );
-            //     //                 groupItems.splice(index, 0, removed);
-
-            //     //                 console.log(initialIndex);
-            //     //                 console.log(index);
-            //     //                 console.log(removed);
-            //     //                 console.log(groupItems);
-
-            //     //                 setItems({ ...items, [group]: groupItems });
-            //     //             }
-            //     //         }
-            //     //     }
-            //     // }
-            // }}
         >
-            <main className="grid grid-cols-2 grid-rows-4 gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
+            <main className="grid grid-cols-2 lg:grid-rows-[auto_auto_auto_auto] grid-rows-4 gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
                 {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
                 <div
                     // ref={timelineRef}
-                    className="col-start-1 col-end-2 row-start-2 row-end-5 lg:row-start-1 lg:row-end-3 flex flex-col gap-4 lg:flex-row h-full bg-secondary rounded-4xl"
+                    className="col-start-1 col-end-2 row-start-2 row-end-5 lg:row-start-1 lg:row-end-3 flex flex-col lg:flex-row gap-4 h-full bg-secondary rounded-4xl"
                 >
-                    <h2 className="text-3xl font-semibold text-center lg:ml-6 mt-6">
+                    <h2
+                        className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 absolute ${timelineHeaderVisible ? "visible" : "invisible"}`}
+                    >
                         Timeline
                     </h2>
                     {/* <div
@@ -472,7 +306,7 @@ export default function LevelPage({
 
                     <Column
                         id="solution"
-                        className="lg:h-full w-full h-[50svh] flex flex-col gap-4 p-4 items-center lg:grid lg:grid-rows-5 lg:grid-flow-col overflow-auto"
+                        className="lg:h-full w-full h-[50svh] flex flex-col gap-0.5 xl:gap-4 p-4 items-center lg:place-items-center lg:grid lg:grid-rows-5 lg:grid-flow-col overflow-auto"
                         style={{
                             gridTemplateColumns: `repeat(${Math.ceil(
                                 level.rules.length / 5,
@@ -486,7 +320,8 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="size-fit lg:size-full text-base lg:text-lg select-none"
+                                className="size-fit lg:size-full text-xs xl:text-lg select-none"
+                                // className="size-fit p-2 md:p-4 lg:p-6 text-base lg:text-lg select-none"
                                 // style={{
                                 //     gridRowStart: (i % 5) + 1,
                                 //     gridColumnStart: i / 5 + 1,
