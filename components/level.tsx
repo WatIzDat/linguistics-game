@@ -23,6 +23,7 @@ import {
     pointerIntersection,
     directionBiased,
 } from "@dnd-kit/collision";
+import { motion } from "motion/react";
 
 function SortableButton({
     ref,
@@ -246,8 +247,9 @@ export default function LevelPage({
         >
             <main className="grid grid-cols-2 lg:grid-rows-[auto_auto_auto_auto] grid-rows-4 gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
                 {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
-                <div
+                <motion.div
                     // ref={timelineRef}
+                    layout
                     className="col-start-1 col-end-2 row-start-2 row-end-5 lg:row-start-1 lg:row-end-3 flex flex-col lg:flex-row gap-4 h-full bg-secondary rounded-4xl"
                 >
                     <h2
@@ -331,8 +333,9 @@ export default function LevelPage({
                             </SortableButton>
                         ))}
                     </Column>
-                </div>
-                <div
+                </motion.div>
+                <motion.div
+                    layout
                     className={`col-start-1 col-end-3 row-start-1 row-end-2 lg:row-end-3 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
                 >
                     {word}
@@ -340,9 +343,12 @@ export default function LevelPage({
                         <span className="font-bold">Goal:</span>{" "}
                         {level.initialWord} → {level.targetWord}
                     </div>
-                </div>
+                </motion.div>
                 {/* </div> */}
-                <div className="col-start-2 lg:col-start-1 col-end-3 row-start-2 lg:row-start-3 row-end-5 flex flex-col gap-4 h-full bg-secondary rounded-4xl">
+                <motion.div
+                    layout
+                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 lg:row-start-3 row-end-5 flex flex-col gap-4 h-full bg-secondary rounded-4xl"
+                >
                     <h2 className="text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                         Changes
                     </h2>
@@ -363,7 +369,7 @@ export default function LevelPage({
                             </SortableButton>
                         ))}
                     </Column>
-                </div>
+                </motion.div>
                 {/* {completed && (
                     <Button
                         className="ml-auto bg-blue-500 w-20 h-12"
