@@ -15,7 +15,7 @@ export default function Header({
 }) {
     return (
         <div>
-            <div className="flex flex-col lg:grid lg:grid-cols-3 items-center justify-between px-12 pt-12">
+            <div className="flex flex-col lg:grid lg:grid-cols-3 items-center justify-between px-4 pt-4 lg:px-12 lg:pt-12">
                 <nav className="flex gap-4 text-lg">
                     <Link className="text-5xl p-2 font-light" href="/">
                         chain→ling
@@ -37,7 +37,7 @@ export default function Header({
                         //     Next
                         // </Button> */}
                     <Link
-                        className={`text-3xl p-2 ${levelCompleted ? "visible" : "invisible"}`}
+                        className={`text-3xl px-2 pt-2 lg:pb-2 ${levelCompleted ? "block lg:visible" : "hidden lg:invisible"}`}
                         href={
                             levelNum === NUM_LEVELS
                                 ? "/end"

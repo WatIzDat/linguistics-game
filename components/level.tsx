@@ -245,15 +245,15 @@ export default function LevelPage({
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="grid grid-cols-2 lg:grid-rows-[auto_auto_auto_auto] grid-rows-4 gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
+            <main className="min-h-0 grid grid-cols-2 lg:grid-rows-[auto_auto_auto_auto] grid-rows-[1fr_auto] gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
                 {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
                 <motion.div
                     // ref={timelineRef}
                     layout
-                    className="col-start-1 col-end-2 row-start-2 row-end-5 lg:row-start-1 lg:row-end-3 flex flex-col lg:flex-row gap-4 h-full bg-secondary rounded-4xl"
+                    className="col-start-1 col-end-2 row-start-2 row-end-3 lg:row-start-1 lg:row-end-3 flex flex-col lg:flex-row gap-4 h-full bg-secondary rounded-4xl"
                 >
                     <h2
-                        className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 absolute ${timelineHeaderVisible ? "visible" : "invisible"}`}
+                        className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 lg:absolute ${timelineHeaderVisible ? "lg:visible" : "lg:invisible"}`}
                     >
                         Timeline
                     </h2>
@@ -308,7 +308,7 @@ export default function LevelPage({
 
                     <Column
                         id="solution"
-                        className="lg:h-full w-full h-[50svh] flex flex-col gap-0.5 xl:gap-4 p-4 items-center lg:place-items-center lg:grid lg:grid-rows-5 lg:grid-flow-col overflow-auto"
+                        className="lg:h-full w-full h-[50svh] flex flex-col gap-1 xl:gap-4 p-4 items-center lg:place-items-center lg:grid lg:grid-rows-5 lg:grid-flow-col overflow-auto"
                         style={{
                             gridTemplateColumns: `repeat(${Math.ceil(
                                 level.rules.length / 5,
@@ -322,7 +322,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="size-fit lg:size-full text-xs xl:text-lg select-none"
+                                className="size-fit lg:size-full text-xs md:text-sm md:p-4 lg:text-base xl:text-lg select-none"
                                 // className="size-fit p-2 md:p-4 lg:p-6 text-base lg:text-lg select-none"
                                 // style={{
                                 //     gridRowStart: (i % 5) + 1,
@@ -347,14 +347,14 @@ export default function LevelPage({
                 {/* </div> */}
                 <motion.div
                     layout
-                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 lg:row-start-3 row-end-5 flex flex-col gap-4 h-full bg-secondary rounded-4xl"
+                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 lg:row-start-3 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 overflow-auto"
                 >
                     <h2 className="text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                         Changes
                     </h2>
                     <Column
                         id="bank"
-                        className="lg:h-full h-[50svh] w-full flex flex-col lg:flex-row flex-nowrap lg:flex-wrap overflow-auto gap-4 p-4 items-center lg:justify-center"
+                        className="h-full w-full flex flex-col lg:flex-row flex-nowrap lg:flex-wrap overflow-auto gap-1 md:gap-2 lg:gap-4 p-4 items-center lg:justify-center"
                     >
                         {items.bank.map((rule, i) => (
                             <SortableButton
@@ -363,7 +363,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="size-fit p-2 md:p-4 lg:p-6 text-base lg:text-lg select-none"
+                                className="size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
