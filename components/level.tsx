@@ -245,15 +245,15 @@ export default function LevelPage({
                 setItems((items) => move(items, event));
             }}
         >
-            <main className="min-h-0 grid grid-cols-2 lg:grid-rows-[auto_auto_auto_auto] grid-rows-[1fr_auto] gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
+            <main className="min-h-0 grid grid-cols-2 lg:max-2xl:grid-cols-[2fr_1fr] grid-rows-[1fr_auto] gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
                 {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
                 <motion.div
                     // ref={timelineRef}
                     layout
-                    className="col-start-1 col-end-2 row-start-2 row-end-3 lg:row-start-1 lg:row-end-3 flex flex-col lg:flex-row gap-4 h-full bg-secondary rounded-4xl"
+                    className="col-start-1 col-end-2 row-start-2 row-end-3 lg:row-start-1 lg:row-end-2 flex flex-col lg:flex-row gap-4 h-full min-h-0 overflow-auto bg-secondary rounded-4xl"
                 >
                     <h2
-                        className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 lg:absolute ${timelineHeaderVisible ? "lg:visible" : "lg:invisible"}`}
+                        className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 lg:absolute 2xl:static ${timelineHeaderVisible ? "lg:visible" : "lg:invisible"} 2xl:visible`}
                     >
                         Timeline
                     </h2>
@@ -322,7 +322,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="size-fit lg:size-full text-xs md:text-sm md:p-4 lg:text-base xl:text-lg select-none"
+                                className="h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none"
                                 // className="size-fit p-2 md:p-4 lg:p-6 text-base lg:text-lg select-none"
                                 // style={{
                                 //     gridRowStart: (i % 5) + 1,
@@ -336,7 +336,12 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    className={`col-start-1 col-end-3 row-start-1 row-end-2 lg:row-end-3 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
+                    animate={
+                        success && {
+                            color: "var(--color-green-500)",
+                        }
+                    }
+                    className={`col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold`}
                 >
                     {word}
                     <div className="text-lg font-normal">
@@ -347,7 +352,7 @@ export default function LevelPage({
                 {/* </div> */}
                 <motion.div
                     layout
-                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 lg:row-start-3 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 overflow-auto"
+                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 xl:min-h-80 overflow-auto"
                 >
                     <h2 className="text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                         Changes
@@ -363,7 +368,7 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="bank"
-                                className="size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
+                                className="w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
