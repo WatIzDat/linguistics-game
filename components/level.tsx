@@ -14,6 +14,7 @@ import {
     CSSProperties,
     Fragment,
     PointerEventHandler,
+    MouseEventHandler,
 } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
@@ -36,6 +37,7 @@ function SortableButton({
     style,
     onHover,
     onLeave,
+    onClick,
 }: {
     ref?: RefObject<Element | null>;
     children: React.ReactNode;
@@ -46,6 +48,7 @@ function SortableButton({
     style?: CSSProperties;
     onHover?: PointerEventHandler<HTMLButtonElement>;
     onLeave?: PointerEventHandler<HTMLButtonElement>;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
 }) {
     const { ref: sortableRef, isDragging } = useSortable({
         id,
@@ -72,6 +75,7 @@ function SortableButton({
             data-dragging={isDragging}
             onPointerOver={onHover}
             onPointerLeave={onLeave}
+            onClick={onClick}
         >
             {children}
         </Button>
@@ -187,6 +191,8 @@ export default function LevelPage({
 
     const [affectedIndices, setAffectedIndices] = useState<number[]>([]);
 
+    const [viewedRuleIndex, setViewedRuleIndex] = useState<number | null>(null);
+
     const [success, setSuccess] = useState(false);
     // const [completed, setCompleted] = useState(false);
 
@@ -198,7 +204,7 @@ export default function LevelPage({
         setTimelineHeaderVisible(items.solution.length <= 0);
 
         const newWord = applyRules(
-            items.solution.filter((x) => x !== null).map((x) => x.rule),
+            items.solution.map((x) => x.rule),
             initialWord,
         );
 
@@ -260,6 +266,22 @@ export default function LevelPage({
                     // ref={timelineRef}
                     layout
                     className="col-start-1 col-end-2 row-start-2 row-end-3 lg:row-start-1 lg:row-end-2 flex flex-col lg:flex-row gap-4 h-full min-h-0 overflow-auto bg-secondary rounded-4xl"
+                    onClick={(event) => {
+                        if (
+                            // event.target === event.currentTarget &&
+                            viewedRuleIndex !== null
+                        ) {
+                            console.log("test");
+                            setWord(
+                                applyRules(
+                                    items.solution.map((x) => x.rule),
+                                    initialWord,
+                                ),
+                            );
+
+                            setViewedRuleIndex(null);
+                        }
+                    }}
                 >
                     <h2
                         className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 lg:absolute 2xl:static ${timelineHeaderVisible ? "lg:visible" : "lg:invisible"} 2xl:visible`}
@@ -331,7 +353,30 @@ export default function LevelPage({
                                 id={rule.id}
                                 index={i}
                                 group="solution"
-                                className="h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none"
+                                className={`h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none ${viewedRuleIndex !== null && i <= viewedRuleIndex ? "bg-muted-foreground" : ""} ${viewedRuleIndex !== null && i === viewedRuleIndex ? "border-white border-4" : ""}`}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+
+                                    setWord(
+                                        viewedRuleIndex === i
+                                            ? applyRules(
+                                                  items.solution.map(
+                                                      (x) => x.rule,
+                                                  ),
+                                                  initialWord,
+                                              )
+                                            : applyRules(
+                                                  items.solution
+                                                      .slice(0, i + 1)
+                                                      .map((rule) => rule.rule),
+                                                  initialWord,
+                                              ),
+                                    );
+
+                                    setViewedRuleIndex(
+                                        viewedRuleIndex === i ? null : i,
+                                    );
+                                }}
                                 // className="size-fit p-2 md:p-4 lg:p-6 text-base lg:text-lg select-none"
                                 // style={{
                                 //     gridRowStart: (i % 5) + 1,
@@ -356,7 +401,7 @@ export default function LevelPage({
                         {[...word].map((letter, i) => (
                             <span
                                 key={i}
-                                className={`transition-colors ${affectedIndices.includes(i) ? "text-muted-foreground" : "text-black"}`}
+                                className={`${affectedIndices.includes(i) ? "transition-colors text-muted-foreground" : "text-inherit"}`}
                             >
                                 {letter}
                             </span>
