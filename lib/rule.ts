@@ -19,7 +19,10 @@ const naturalClassToRegex: { [k: string]: string } = {
     // "[-low]": "[eiou]",
 };
 
-export function applyRule(rule: Rule, word: string): string {
+export function applyRule(
+    rule: Rule,
+    word: string,
+): [word: string, changedIndices: number[]] {
     const naturalClassRe = new RegExp("\\[.*\\]|C|V", "g");
 
     if (!rule.environment) {
@@ -33,7 +36,10 @@ export function applyRule(rule: Rule, word: string): string {
 
         console.log(re);
 
-        return word.replaceAll(re, rule.replacement);
+        return [
+            word.replaceAll(re, rule.replacement),
+            [...word.matchAll(re)].map((m) => m.index),
+        ];
     }
 
     const environment: (string | null)[] = rule.environment.split(" ");
@@ -134,11 +140,14 @@ export function applyRule(rule: Rule, word: string): string {
 
     console.log(re);
 
-    return word.replace(re, rule.replacement);
+    return [
+        word.replace(re, rule.replacement),
+        [...word.matchAll(re)].map((m) => m.index),
+    ];
 }
 
 export function applyRules(rules: Rule[], word: string): string {
-    rules.forEach((rule) => (word = applyRule(rule, word)));
+    rules.forEach((rule) => (word = applyRule(rule, word)[0]));
 
     return word;
 }

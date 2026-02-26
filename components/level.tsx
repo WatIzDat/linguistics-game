@@ -1,6 +1,6 @@
 "use client";
 
-import { Rule, applyRules, formatRule } from "@/lib/rule";
+import { Rule, applyRule, applyRules, formatRule } from "@/lib/rule";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
@@ -13,6 +13,7 @@ import {
     RefObject,
     CSSProperties,
     Fragment,
+    PointerEventHandler,
 } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
@@ -33,6 +34,8 @@ function SortableButton({
     group,
     className,
     style,
+    onHover,
+    onLeave,
 }: {
     ref?: RefObject<Element | null>;
     children: React.ReactNode;
@@ -41,6 +44,8 @@ function SortableButton({
     group: string;
     className?: string;
     style?: CSSProperties;
+    onHover?: PointerEventHandler<HTMLButtonElement>;
+    onLeave?: PointerEventHandler<HTMLButtonElement>;
 }) {
     const { ref: sortableRef, isDragging } = useSortable({
         id,
@@ -65,6 +70,8 @@ function SortableButton({
             className={className}
             style={style}
             data-dragging={isDragging}
+            onPointerOver={onHover}
+            onPointerLeave={onLeave}
         >
             {children}
         </Button>
@@ -177,6 +184,8 @@ export default function LevelPage({
     const targetWord = level.targetWord;
 
     const [word, setWord] = useState(initialWord);
+
+    const [affectedIndices, setAffectedIndices] = useState<number[]>([]);
 
     const [success, setSuccess] = useState(false);
     // const [completed, setCompleted] = useState(false);
@@ -343,7 +352,16 @@ export default function LevelPage({
                     }
                     className={`col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold`}
                 >
-                    {word}
+                    <div>
+                        {[...word].map((letter, i) => (
+                            <span
+                                key={i}
+                                className={`transition-colors ${affectedIndices.includes(i) ? "text-muted-foreground" : "text-black"}`}
+                            >
+                                {letter}
+                            </span>
+                        ))}
+                    </div>
                     <div className="text-lg font-normal">
                         <span className="font-bold">Goal:</span>{" "}
                         {level.initialWord} → {level.targetWord}
@@ -369,6 +387,12 @@ export default function LevelPage({
                                 index={i}
                                 group="bank"
                                 className="w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
+                                onHover={() =>
+                                    setAffectedIndices(
+                                        applyRule(rule.rule, word)[1],
+                                    )
+                                }
+                                onLeave={() => setAffectedIndices([])}
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
