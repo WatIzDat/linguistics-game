@@ -26,6 +26,7 @@ import {
     directionBiased,
 } from "@dnd-kit/collision";
 import { motion } from "motion/react";
+import { RotateCcwIcon } from "lucide-react";
 
 function SortableButton({
     ref,
@@ -283,11 +284,26 @@ export default function LevelPage({
                         }
                     }}
                 >
-                    <h2
-                        className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 lg:absolute 2xl:static ${timelineHeaderVisible ? "lg:visible" : "lg:invisible"} 2xl:visible`}
-                    >
-                        Timeline
-                    </h2>
+                    <div className="flex flex-col justify-center lg:justify-between">
+                        <h2
+                            className={`text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6 lg:absolute 2xl:static ${timelineHeaderVisible ? "lg:visible" : "lg:invisible"} 2xl:visible`}
+                        >
+                            Timeline
+                        </h2>
+                        <Button
+                            className="ml-6 mb-6 max-2xl:hidden"
+                            size="icon"
+                            variant="ghost"
+                            onClick={() =>
+                                setItems({
+                                    bank: rules,
+                                    solution: [],
+                                })
+                            }
+                        >
+                            <RotateCcwIcon />
+                        </Button>
+                    </div>
                     {/* <div
                         className="size-full grid grid-rows-5 gap-4 p-4"
                         style={{
@@ -390,7 +406,7 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    className={`transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
+                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
                 >
                     <div>
                         {[...word].map((letter, i) => (
@@ -406,6 +422,19 @@ export default function LevelPage({
                         <span className="font-bold">Goal:</span>{" "}
                         {level.initialWord} → {level.targetWord}
                     </div>
+                    <Button
+                        className="ml-6 mb-6 2xl:hidden absolute top-0 right-0"
+                        size="icon"
+                        variant="ghost"
+                        onClick={() =>
+                            setItems({
+                                bank: rules,
+                                solution: [],
+                            })
+                        }
+                    >
+                        <RotateCcwIcon />
+                    </Button>
                 </motion.div>
                 {/* </div> */}
                 <motion.div
