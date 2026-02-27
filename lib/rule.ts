@@ -38,7 +38,13 @@ export function applyRule(
 
         return [
             word.replaceAll(re, rule.replacement),
-            [...word.matchAll(re)].map((m) => m.index),
+            [...word.matchAll(re)].flatMap((m) => {
+                console.log(m);
+                return Array.from(
+                    new Array(m[0].length),
+                    (_, i) => i + m.index,
+                );
+            }),
         ];
     }
 
@@ -142,7 +148,9 @@ export function applyRule(
 
     return [
         word.replace(re, rule.replacement),
-        [...word.matchAll(re)].map((m) => m.index),
+        [...word.matchAll(re)].flatMap((m) =>
+            Array.from(new Array(m[0].length), (_, i) => i + m.index),
+        ),
     ];
 }
 

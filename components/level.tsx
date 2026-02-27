@@ -390,18 +390,13 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    animate={
-                        success && {
-                            color: "var(--color-green-500)",
-                        }
-                    }
-                    className={`col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold`}
+                    className={`transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
                 >
                     <div>
                         {[...word].map((letter, i) => (
                             <span
                                 key={i}
-                                className={`${affectedIndices.includes(i) ? "transition-colors text-muted-foreground" : "text-inherit"}`}
+                                className={`transition-colors ${affectedIndices.includes(i) ? "text-muted-foreground" : "text-inherit"}`}
                             >
                                 {letter}
                             </span>
