@@ -1,7 +1,11 @@
 {
     "name": "title level",
-    "initialWord": "chain",
-    "targetWord": "ling",
+    "words": [
+        {
+            "initialWord": "chain",
+            "targetWord": "ling"
+        }
+    ],
     "rules": [
         { "pattern": "", "replacement": "r", "environment": "V _" },
         { "pattern": "", "replacement": "r", "environment": "V _ V" },

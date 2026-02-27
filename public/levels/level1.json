@@ -1,7 +1,11 @@
 {
     "name": "humble beginnings",
-    "initialWord": "pet",
-    "targetWord": "bed",
+    "words": [
+        {
+            "initialWord": "pet",
+            "targetWord": "bed"
+        }
+    ],
     "rules": [
         { "pattern": "p", "replacement": "b" },
         { "pattern": "t", "replacement": "d" }

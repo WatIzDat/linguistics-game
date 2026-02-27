@@ -1,7 +1,11 @@
 {
     "name": "#linguistics",
-    "initialWord": "dad",
-    "targetWord": "dat",
+    "words": [
+        {
+            "initialWord": "dad",
+            "targetWord": "dat"
+        }
+    ],
     "rules": [
         { "pattern": "d", "replacement": "", "environment": "# _" },
         { "pattern": "", "replacement": "a", "environment": "_ #" },

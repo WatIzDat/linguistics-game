@@ -1,7 +1,11 @@
 {
     "name": "natural classes",
-    "initialWord": "tada",
-    "targetWord": "dotu",
+    "words": [
+        {
+            "initialWord": "tada",
+            "targetWord": "dotu"
+        }
+    ],
     "rules": [
         { "pattern": "t", "replacement": "d", "environment": "_ V" },
         { "pattern": "d", "replacement": "t", "environment": "V _ V" },

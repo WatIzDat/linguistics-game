@@ -1,7 +1,11 @@
 {
     "name": "detour",
-    "initialWord": "start",
-    "targetWord": "end",
+    "words": [
+        {
+            "initialWord": "start",
+            "targetWord": "end"
+        }
+    ],
     "rules": [
         { "pattern": "t", "replacement": "d", "environment": "_ V" },
         { "pattern": "s", "replacement": "e", "environment": "C _" },

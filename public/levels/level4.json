@@ -1,7 +1,11 @@
 {
     "name": "take care of the environment",
-    "initialWord": "pat",
-    "targetWord": "bad",
+    "words": [
+        {
+            "initialWord": "pat",
+            "targetWord": "bad"
+        }
+    ],
     "rules": [
         { "pattern": "p", "replacement": "b", "environment": "_ i" },
         { "pattern": "a", "replacement": "e" },

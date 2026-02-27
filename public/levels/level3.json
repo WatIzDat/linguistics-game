@@ -1,7 +1,11 @@
 {
     "name": "environments",
-    "initialWord": "meet",
-    "targetWord": "neat",
+    "words": [
+        {
+            "initialWord": "meet",
+            "targetWord": "neat"
+        }
+    ],
     "rules": [
         { "pattern": "m", "replacement": "n", "environment": "_ i" },
         { "pattern": "e", "replacement": "i" },

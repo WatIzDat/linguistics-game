@@ -185,12 +185,12 @@ export default function LevelPage({
         solution: [],
     });
 
-    const initialWord = level.initialWord;
-    const targetWord = level.targetWord;
+    // const initialWord = level.initialWord;
+    // const targetWord = level.targetWord;
 
-    const [word, setWord] = useState(initialWord);
+    const [words, setWords] = useState(level.words.map((w) => w.initialWord));
 
-    const [affectedIndices, setAffectedIndices] = useState<number[]>([]);
+    const [affectedIndices, setAffectedIndices] = useState<number[][]>([]);
 
     const [viewedRuleIndex, setViewedRuleIndex] = useState<number | null>(null);
 
@@ -204,14 +204,26 @@ export default function LevelPage({
     useEffect(() => {
         setTimelineHeaderVisible(items.solution.length <= 0);
 
-        const newWord = applyRules(
-            items.solution.map((x) => x.rule),
-            initialWord,
+        const newWords = words.map((w, i) =>
+            applyRules(
+                items.solution.map((x) => x.rule),
+                level.words[i].initialWord,
+            ),
         );
 
-        setWord(newWord);
+        setWords(newWords);
 
-        if (newWord === targetWord) {
+        let allEqual = true;
+
+        for (let i = 0; i < newWords.length; i++) {
+            if (newWords[i] !== level.words[i].targetWord) {
+                allEqual = false;
+
+                break;
+            }
+        }
+
+        if (allEqual) {
             setTimeoutID(
                 setTimeout(() => {
                     setSuccess(true);
@@ -273,10 +285,19 @@ export default function LevelPage({
                             viewedRuleIndex !== null
                         ) {
                             console.log("test");
-                            setWord(
-                                applyRules(
-                                    items.solution.map((x) => x.rule),
-                                    initialWord,
+                            // setWords(
+                            //     applyRules(
+                            //         items.solution.map((x) => x.rule),
+                            //         initialWord,
+                            //     ),
+                            // );
+
+                            setWords(
+                                words.map((w, i) =>
+                                    applyRules(
+                                        items.solution.map((x) => x.rule),
+                                        level.words[i].initialWord,
+                                    ),
                                 ),
                             );
 
@@ -373,19 +394,28 @@ export default function LevelPage({
                                 onClick={(event) => {
                                     event.stopPropagation();
 
-                                    setWord(
+                                    setWords(
                                         viewedRuleIndex === i
-                                            ? applyRules(
-                                                  items.solution.map(
-                                                      (x) => x.rule,
+                                            ? words.map((w, j) =>
+                                                  applyRules(
+                                                      items.solution.map(
+                                                          (x) => x.rule,
+                                                      ),
+                                                      level.words[j]
+                                                          .initialWord,
                                                   ),
-                                                  initialWord,
                                               )
-                                            : applyRules(
-                                                  items.solution
-                                                      .slice(0, i + 1)
-                                                      .map((rule) => rule.rule),
-                                                  initialWord,
+                                            : words.map((w, j) =>
+                                                  applyRules(
+                                                      items.solution
+                                                          .slice(0, i + 1)
+                                                          .map(
+                                                              (rule) =>
+                                                                  rule.rule,
+                                                          ),
+                                                      level.words[j]
+                                                          .initialWord,
+                                                  ),
                                               ),
                                     );
 
@@ -408,20 +438,25 @@ export default function LevelPage({
                     layout
                     className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
                 >
-                    <div>
-                        {[...word].map((letter, i) => (
-                            <span
-                                key={i}
-                                className={`transition-colors ${affectedIndices.includes(i) ? "text-muted-foreground" : "text-inherit"}`}
-                            >
-                                {letter}
-                            </span>
-                        ))}
-                    </div>
-                    <div className="text-lg font-normal">
-                        <span className="font-bold">Goal:</span>{" "}
-                        {level.initialWord} → {level.targetWord}
-                    </div>
+                    {words.map((word, wordIndex) => (
+                        <Fragment key={wordIndex}>
+                            <div>
+                                {[...word].map((letter, i) => (
+                                    <span
+                                        key={i}
+                                        className={`transition-colors ${affectedIndices[wordIndex]?.includes(i) ? "text-muted-foreground" : "text-inherit"}`}
+                                    >
+                                        {letter}
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="text-lg font-normal">
+                                <span className="font-bold">Goal:</span>{" "}
+                                {level.words[wordIndex].initialWord} →{" "}
+                                {level.words[wordIndex].targetWord}
+                            </div>
+                        </Fragment>
+                    ))}
                     <Button
                         className="ml-6 mb-6 2xl:hidden absolute top-0 right-0"
                         size="icon"
@@ -458,7 +493,9 @@ export default function LevelPage({
                                 className="w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
                                 onHover={() =>
                                     setAffectedIndices(
-                                        applyRule(rule.rule, word)[1],
+                                        words.map(
+                                            (w) => applyRule(rule.rule, w)[1],
+                                        ),
                                     )
                                 }
                                 onLeave={() => setAffectedIndices([])}

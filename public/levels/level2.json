@@ -1,7 +1,11 @@
 {
     "name": "order matters",
-    "initialWord": "kate",
-    "targetWord": "kite",
+    "words": [
+        {
+            "initialWord": "kate",
+            "targetWord": "kite"
+        }
+    ],
     "rules": [
         { "pattern": "a", "replacement": "e" },
         { "pattern": "a", "replacement": "e" },

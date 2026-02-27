@@ -1,7 +1,11 @@
 {
     "name": "deletion and insertion",
-    "initialWord": "gate",
-    "targetWord": "gade",
+    "words": [
+        {
+            "initialWord": "gate",
+            "targetWord": "gade"
+        }
+    ],
     "rules": [
         { "pattern": "a", "replacement": "" },
         {
