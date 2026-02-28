@@ -1,0 +1,22 @@
+{
+    "name": "mirror",
+    "words": [
+        {
+            "initialWord": "kate",
+            "targetWord": "kite"
+        },
+        {
+            "initialWord": "kite",
+            "targetWord": "kate"
+        }
+    ],
+    "rules": [
+        { "pattern": "a", "replacement": "e" },
+        { "pattern": "a", "replacement": "e" },
+        { "pattern": "e", "replacement": "i" },
+        { "pattern": "e", "replacement": "i" },
+        { "pattern": "i", "replacement": "a" },
+        { "pattern": "i", "replacement": "o" },
+        { "pattern": "o", "replacement": "a" }
+    ]
+}
