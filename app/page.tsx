@@ -28,6 +28,9 @@ export default async function Home() {
                     ))}
                 </div>
             </div>
+            <footer className="mt-6 text-2xl">
+                sounds by JDSherbert on itch.io
+            </footer>
         </main>
     );
 }

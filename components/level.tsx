@@ -27,6 +27,7 @@ import {
 } from "@dnd-kit/collision";
 import { motion } from "motion/react";
 import { RotateCcwIcon } from "lucide-react";
+import { Howl, Howler } from "howler";
 
 function SortableButton({
     ref,
@@ -201,6 +202,22 @@ export default function LevelPage({
 
     const [timelineHeaderVisible, setTimelineHeaderVisible] = useState(true);
 
+    const pickupSounds = [
+        new Howl({ src: ["sounds/cursor1.mp3"] }),
+        // new Howl({ src: ["sounds/cursor2.mp3"] }),
+    ];
+
+    const dropSounds = [
+        new Howl({ src: ["sounds/swipe1.mp3"], volume: 0.5 }),
+        new Howl({ src: ["sounds/swipe2.mp3"], volume: 0.5 }),
+    ];
+
+    const swapSound = new Howl({ src: ["sounds/cursor2.mp3"] });
+
+    const successSound = new Howl({ src: ["sounds/success.mp3"] });
+
+    Howler.volume(0.5);
+
     useEffect(() => {
         setTimelineHeaderVisible(items.solution.length <= 0);
 
@@ -212,6 +229,8 @@ export default function LevelPage({
         );
 
         setWords(newWords);
+
+        swapSound.play();
 
         let allEqual = true;
 
@@ -229,6 +248,8 @@ export default function LevelPage({
                     setSuccess(true);
 
                     setCompleted(true);
+
+                    successSound.play();
 
                     if (levelNum === NUM_LEVELS) {
                         localStorage.removeItem("level");
@@ -269,8 +290,39 @@ export default function LevelPage({
 
     return (
         <DragDropProvider
+            onDragStart={(event) => {
+                pickupSounds[
+                    Math.floor(Math.random() * pickupSounds.length)
+                ].play();
+            }}
+            onDragEnd={(event) => {
+                dropSounds[
+                    Math.floor(Math.random() * dropSounds.length)
+                ].play();
+            }}
+            // onCollision={(event) => {
+            //     // console.log(event.collisions);
+            //     if (
+            //         event.collisions
+            //             .slice(1)
+            //             .find((c) => Number.isInteger(c.id))
+            //     ) {
+            //         pickupSounds[
+            //             Math.floor(Math.random() * pickupSounds.length)
+            //         ].play();
+            //     }
+            // }}
             onDragOver={(event) => {
                 setItems((items) => move(items, event));
+
+                // console.log(event.operation.target);
+                // if (isSortable(event.operation.source)) {
+                //     if (event.operation.source.group) {
+                //         pickupSounds[
+                //             Math.floor(Math.random() * pickupSounds.length)
+                //         ].play();
+                //     }
+                // }
             }}
         >
             <main className="min-h-0 grid grid-cols-2 lg:max-2xl:grid-cols-[2fr_1fr] grid-rows-[1fr_auto] gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
