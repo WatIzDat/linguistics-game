@@ -28,6 +28,8 @@ import {
 import { motion } from "motion/react";
 import { RotateCcwIcon } from "lucide-react";
 import { Howl, Howler } from "howler";
+import { usePrevious } from "@/lib/utils";
+import { isEqual } from "lodash-es";
 
 function SortableButton({
     ref,
@@ -197,8 +199,10 @@ export default function LevelPage({
 
     const [success, setSuccess] = useState(false);
     // const [completed, setCompleted] = useState(false);
+    const isFirstSuccessRef = useRef(true);
 
-    const [timeoutID, setTimeoutID] = useState<NodeJS.Timeout | null>(null);
+    // const [timeoutID, setTimeoutID] = useState<NodeJS.Timeout | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const [timelineHeaderVisible, setTimelineHeaderVisible] = useState(true);
 
@@ -218,7 +222,10 @@ export default function LevelPage({
 
     Howler.volume(0.5);
 
+    const prevItems = usePrevious(items);
+
     useEffect(() => {
+        console.log(items);
         setTimelineHeaderVisible(items.solution.length <= 0);
 
         const newWords = words.map((w, i) =>
@@ -230,11 +237,15 @@ export default function LevelPage({
 
         setWords(newWords);
 
-        swapSound.play();
+        if (!isEqual(items, prevItems)) {
+            swapSound.play();
+        }
 
         let allEqual = true;
 
         for (let i = 0; i < newWords.length; i++) {
+            console.log(newWords[i]);
+            console.log(level.words[i].targetWord);
             if (newWords[i] !== level.words[i].targetWord) {
                 allEqual = false;
 
@@ -243,31 +254,35 @@ export default function LevelPage({
         }
 
         if (allEqual) {
-            setTimeoutID(
-                setTimeout(() => {
-                    setSuccess(true);
+            if (timeoutRef.current !== null) {
+                clearTimeout(timeoutRef.current);
+            }
 
-                    setCompleted(true);
+            timeoutRef.current = setTimeout(() => {
+                setSuccess(true);
 
+                setCompleted(true);
+
+                if (isFirstSuccessRef.current) {
                     successSound.play();
+                }
 
-                    if (levelNum === NUM_LEVELS) {
-                        localStorage.removeItem("level");
-                    } else {
-                        localStorage.setItem(
-                            "level",
-                            (levelNum + 1).toString(),
-                        );
-                    }
-                }, 1000),
-            );
+                isFirstSuccessRef.current = false;
+
+                if (levelNum === NUM_LEVELS) {
+                    localStorage.removeItem("level");
+                } else {
+                    localStorage.setItem("level", (levelNum + 1).toString());
+                }
+            }, 1000);
         } else {
+            console.log("not success");
             setSuccess(false);
 
-            if (timeoutID) {
-                clearTimeout(timeoutID);
+            if (timeoutRef.current !== null) {
+                clearTimeout(timeoutRef.current);
 
-                setTimeoutID(null);
+                timeoutRef.current = null;
             }
         }
     }, [items]);
@@ -496,7 +511,13 @@ export default function LevelPage({
                                 {[...word].map((letter, i) => (
                                     <span
                                         key={i}
-                                        className={`transition-colors ${affectedIndices[wordIndex]?.includes(i) ? "text-muted-foreground" : "text-inherit"}`}
+                                        className={`transition-colors ${
+                                            affectedIndices[
+                                                wordIndex
+                                            ]?.includes(i)
+                                                ? "text-muted-foreground"
+                                                : "text-inherit"
+                                        }`}
                                     >
                                         {letter}
                                     </span>
