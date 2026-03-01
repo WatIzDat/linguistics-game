@@ -26,10 +26,28 @@ import {
     directionBiased,
 } from "@dnd-kit/collision";
 import { motion } from "motion/react";
-import { RotateCcwIcon } from "lucide-react";
+import { InfoIcon, RotateCcwIcon } from "lucide-react";
 import { Howl, Howler } from "howler";
 import { usePrevious } from "@/lib/utils";
 import { isEqual } from "lodash-es";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip";
+import {
+    Popover,
+    PopoverContent,
+    PopoverDescription,
+    PopoverHeader,
+    PopoverTrigger,
+} from "./ui/popover";
+import {
+    HybridTooltip,
+    HybridTooltipContent,
+    HybridTooltipTrigger,
+} from "./ui/hybrid-tooltip";
 
 function SortableButton({
     ref,
@@ -546,15 +564,56 @@ export default function LevelPage({
                     >
                         <RotateCcwIcon />
                     </Button>
+                    {levelNum >= 5 && (
+                        <HybridTooltip>
+                            <HybridTooltipTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="md:hidden ml-6 mt-6 absolute bottom-0 right-0"
+                                >
+                                    <InfoIcon />
+                                </Button>
+                            </HybridTooltipTrigger>
+                            <HybridTooltipContent
+                                className="w-fit bg-black text-white"
+                                side="left"
+                            >
+                                <p>V: a, e, i, o, and u</p>
+                                <p>C: everything else</p>
+                            </HybridTooltipContent>
+                        </HybridTooltip>
+                    )}
                 </motion.div>
                 {/* </div> */}
                 <motion.div
                     layout
                     className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 2xl:min-h-80 overflow-auto"
                 >
-                    <h2 className="text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
-                        Changes
-                    </h2>
+                    <div className="md:grid md:grid-cols-3 lg:flex lg:justify-between">
+                        <h2 className="col-start-2 text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
+                            Changes
+                        </h2>
+                        {levelNum >= 5 && (
+                            <HybridTooltip>
+                                <HybridTooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="max-md:hidden mr-6 mt-6 ml-auto"
+                                    >
+                                        <InfoIcon />
+                                    </Button>
+                                </HybridTooltipTrigger>
+                                <HybridTooltipContent
+                                    className="w-fit bg-black text-white"
+                                    side="top"
+                                >
+                                    <p>V: a, e, i, o, and u</p>
+                                    <p>C: everything else</p>
+                                </HybridTooltipContent>
+                            </HybridTooltip>
+                        )}
+                    </div>
                     <Column
                         id="bank"
                         className="h-full w-full flex flex-col lg:flex-row flex-nowrap lg:flex-wrap overflow-auto gap-1 md:gap-2 lg:gap-4 p-4 items-center lg:justify-center"
