@@ -1,0 +1,24 @@
+{
+    "name": "cycle",
+    "words": [
+        {
+            "initialWord": "cycle",
+            "targetWord": "circle"
+        },
+        {
+            "initialWord": "circle",
+            "targetWord": "cycle"
+        }
+    ],
+    "rules": [
+        { "pattern": "r", "replacement": "" },
+        { "pattern": "c", "replacement": "y", "environment": "C _ C" },
+        { "pattern": "V", "replacement": "", "environment": "C _ C" },
+        { "pattern": "", "replacement": "ir", "environment": "c _" },
+        { "pattern": "cir", "replacement": "c" },
+        { "pattern": "", "replacement": "c", "environment": "cC _" },
+        { "pattern": "y", "replacement": "a", "environment": "_ l" },
+        { "pattern": "y", "replacement": "ir", "environment": "_ Ca" },
+        { "pattern": "a", "replacement": "" }
+    ]
+}
