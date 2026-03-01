@@ -503,10 +503,13 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-col gap-4 h-full items-center justify-center text-5xl lg:text-9xl font-bold ${success && "text-green-500"}`}
+                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-wrap lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${words.length === 2 && "flex-col"} h-full items-center justify-center text-5xl ${words.length > 2 ? "lg:text-7xl 2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
                 >
                     {words.map((word, wordIndex) => (
-                        <Fragment key={wordIndex}>
+                        <div
+                            key={wordIndex}
+                            className={`flex flex-col gap-4 items-center justify-center w-1/2 h-1/2`}
+                        >
                             <div>
                                 {[...word].map((letter, i) => (
                                     <span
@@ -523,12 +526,12 @@ export default function LevelPage({
                                     </span>
                                 ))}
                             </div>
-                            <div className="text-lg font-normal">
+                            <div className="text-lg font-normal text-center">
                                 <span className="font-bold">Goal:</span>{" "}
                                 {level.words[wordIndex].initialWord} →{" "}
                                 {level.words[wordIndex].targetWord}
                             </div>
-                        </Fragment>
+                        </div>
                     ))}
                     <Button
                         className="ml-6 mb-6 2xl:hidden absolute top-0 right-0"
@@ -547,7 +550,7 @@ export default function LevelPage({
                 {/* </div> */}
                 <motion.div
                     layout
-                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 xl:min-h-80 overflow-auto"
+                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 2xl:min-h-80 overflow-auto"
                 >
                     <h2 className="text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                         Changes
