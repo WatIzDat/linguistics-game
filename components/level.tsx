@@ -246,6 +246,7 @@ export default function LevelPage({
         console.log(items);
         setTimelineHeaderVisible(items.solution.length <= 0);
 
+        // TODO: fix this overriding viewed rule
         const newWords = words.map((w, i) =>
             applyRules(
                 items.solution.map((x) => x.rule),
@@ -321,6 +322,67 @@ export default function LevelPage({
 
     // const snapshot = useRef(structuredClone(items));
 
+    const wordRefs = [...Array(level.words.length)].map((_) =>
+        useRef<HTMLDivElement>(null),
+    );
+    console.log(wordRefs);
+    const [isWordOverflowing, setIsWordOverflowing] = useState(
+        [...Array(level.words.length)].map((_) => false),
+    );
+
+    useEffect(() => {
+        for (let i = 0; i < wordRefs.length; i++) {
+            const el = wordRefs[i].current;
+
+            if (!el) {
+                return;
+            }
+
+            const check = () => {
+                const clone = el.cloneNode(true) as HTMLElement;
+                const computed = getComputedStyle(el).fontSize;
+
+                // Array.from(computed).forEach((key) => {
+                //     clone.style.setProperty(
+                //         key,
+                //         computed.getPropertyValue(key),
+                //     );
+                // });
+
+                Object.assign(clone.style, {
+                    position: "fixed",
+                    visibility: "hidden",
+                    width: "auto",
+                    overflow: "visible",
+                    top: "-9999px",
+                    fontSize: computed,
+                });
+
+                // clone.ref = null;
+                console.log(clone.style);
+
+                document.body.appendChild(clone);
+                const isOverflowing = clone.scrollWidth > el.clientWidth;
+                console.log(clone.scrollWidth);
+                console.log(el.clientWidth);
+                document.body.removeChild(clone);
+
+                console.log(isOverflowing);
+                setIsWordOverflowing(
+                    isWordOverflowing.map((_, j) =>
+                        j === i ? isOverflowing : isWordOverflowing[j],
+                    ),
+                );
+            };
+
+            const observer = new ResizeObserver(check);
+            observer.observe(el);
+            check();
+
+            return () => observer.disconnect();
+        }
+    }, [words]);
+
     return (
         <DragDropProvider
             onDragStart={(event) => {
@@ -358,6 +420,7 @@ export default function LevelPage({
                 // }
             }}
         >
+            {/* <div>{isWordOverflowing ? "Overflow" : "Not overflow"}</div> */}
             <main className="min-h-0 grid grid-cols-2 lg:max-2xl:grid-cols-[2fr_1fr] grid-rows-[1fr_auto] gap-4 lg:gap-12 bg-background p-4 lg:p-12 sm:items-start">
                 {/* <div className="h-1/2 w-full flex items-center justify-center"> */}
                 <motion.div
@@ -521,11 +584,12 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-wrap lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${words.length === 2 && "flex-col"} h-full items-center justify-center text-5xl ${words.length > 2 ? "lg:text-7xl 2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
+                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex flex-wrap lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${isWordOverflowing.includes(true) && "flex-col flex-nowrap"} ${words.length === 2 && "flex-col"} h-full items-center justify-center text-5xl ${words.length > 2 ? "lg:text-7xl 2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
                 >
                     {words.map((word, wordIndex) => (
                         <div
                             key={wordIndex}
+                            ref={wordRefs[wordIndex]}
                             className={`flex flex-col gap-4 items-center justify-center w-1/2 h-1/2`}
                         >
                             <div>
