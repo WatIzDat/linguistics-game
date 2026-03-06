@@ -18,7 +18,7 @@ export default async function Page({
 
     const level: Level = await response.json();
 
-    console.log(level);
+    // console.log(level);
 
     return <LevelLayout level={level} levelNum={levelNum} />;
 }

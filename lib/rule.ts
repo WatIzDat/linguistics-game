@@ -34,12 +34,12 @@ export function applyRule(
 
         const re = new RegExp(reStr, "g");
 
-        console.log(re);
+        // console.log(re);
 
         return [
             word.replaceAll(re, rule.replacement),
             [...word.matchAll(re)].flatMap((m) => {
-                console.log(m);
+                // console.log(m);
                 return Array.from(
                     new Array(m[0].length),
                     (_, i) => i + m.index,
@@ -97,7 +97,7 @@ export function applyRule(
     // const naturalClassRe = new RegExp("\\[.*\\]|C|V", "g");
 
     if (environment[0]) {
-        console.log([...environment[0].matchAll(naturalClassRe)]);
+        // console.log([...environment[0].matchAll(naturalClassRe)]);
 
         // [...environment[0].matchAll(naturalClassRe)].map((match) => {
         //     environment[0] = environment[0]!.replace(
@@ -144,7 +144,7 @@ export function applyRule(
 
     const re = new RegExp(reStr, "g");
 
-    console.log(re);
+    // console.log(re);
 
     return [
         word.replace(re, rule.replacement),

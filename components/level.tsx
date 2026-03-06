@@ -48,6 +48,7 @@ import {
     HybridTooltipContent,
     HybridTooltipTrigger,
 } from "./ui/hybrid-tooltip";
+import Word from "./word";
 
 function SortableButton({
     ref,
@@ -243,7 +244,7 @@ export default function LevelPage({
     const prevItems = usePrevious(items);
 
     useEffect(() => {
-        console.log(items);
+        // console.log(items);
         setTimelineHeaderVisible(items.solution.length <= 0);
 
         const newWords =
@@ -272,8 +273,8 @@ export default function LevelPage({
         let allEqual = true;
 
         for (let i = 0; i < newWords.length; i++) {
-            console.log(newWords[i]);
-            console.log(level.words[i].targetWord);
+            // console.log(newWords[i]);
+            // console.log(level.words[i].targetWord);
             if (newWords[i] !== level.words[i].targetWord) {
                 allEqual = false;
 
@@ -304,7 +305,7 @@ export default function LevelPage({
                 }
             }, 1000);
         } else {
-            console.log("not success");
+            // console.log("not success");
             setSuccess(false);
 
             if (timeoutRef.current !== null) {
@@ -313,6 +314,10 @@ export default function LevelPage({
                 timeoutRef.current = null;
             }
         }
+
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
     }, [items]);
 
     // const [ruleButtonHeight, setRuleButtonHeight] = useState(0);
@@ -334,7 +339,11 @@ export default function LevelPage({
     const wordRefs = [...Array(level.words.length)].map((_) =>
         useRef<HTMLDivElement>(null),
     );
-    console.log(wordRefs);
+
+    const measureRefs = [...Array(level.words.length)].map((_) =>
+        useRef<HTMLDivElement>(null),
+    );
+    // console.log(wordRefs);
     const [isWordOverflowing, setIsWordOverflowing] = useState(
         [...Array(level.words.length)].map((_) => false),
     );
@@ -342,41 +351,40 @@ export default function LevelPage({
     useEffect(() => {
         for (let i = 0; i < wordRefs.length; i++) {
             const el = wordRefs[i].current;
+            const measure = measureRefs[i].current;
 
-            if (!el) {
+            if (!el || !measure) {
                 return;
             }
 
             const check = () => {
-                const clone = el.cloneNode(true) as HTMLElement;
-                const computed = getComputedStyle(el).fontSize;
+                // const clone = el.cloneNode(true) as HTMLElement;
+                // const computed = getComputedStyle(el).fontSize;
 
-                // Array.from(computed).forEach((key) => {
-                //     clone.style.setProperty(
-                //         key,
-                //         computed.getPropertyValue(key),
-                //     );
+                // // Array.from(computed).forEach((key) => {
+                // //     clone.style.setProperty(
+                // //         key,
+                // //         computed.getPropertyValue(key),
+                // //     );
+                // // });
+
+                // Object.assign(clone.style, {
+                //     position: "fixed",
+                //     visibility: "hidden",
+                //     width: "auto",
+                //     overflow: "visible",
+                //     top: "-9999px",
+                //     fontSize: computed,
                 // });
 
-                Object.assign(clone.style, {
-                    position: "fixed",
-                    visibility: "hidden",
-                    width: "auto",
-                    overflow: "visible",
-                    top: "-9999px",
-                    fontSize: computed,
-                });
+                // // clone.ref = null;
 
-                // clone.ref = null;
-                console.log(clone.style);
+                // document.body.appendChild(clone);
+                // const isOverflowing = clone.scrollWidth > el.clientWidth - 50;
+                // document.body.removeChild(clone);
 
-                document.body.appendChild(clone);
-                const isOverflowing = clone.scrollWidth > el.clientWidth - 50;
-                console.log(clone.scrollWidth);
-                console.log(el.clientWidth);
-                document.body.removeChild(clone);
+                const isOverflowing = measure.scrollWidth > el.clientWidth - 50;
 
-                console.log(isOverflowing);
                 setIsWordOverflowing(
                     isWordOverflowing.map((_, j) =>
                         j === i ? isOverflowing : isWordOverflowing[j],
@@ -441,7 +449,7 @@ export default function LevelPage({
                             // event.target === event.currentTarget &&
                             viewedRuleIndex !== null
                         ) {
-                            console.log("test");
+                            // console.log("test");
                             // setWords(
                             //     applyRules(
                             //         items.solution.map((x) => x.rule),
@@ -593,36 +601,26 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${isWordOverflowing.includes(true) ? "flex-col flex-nowrap" : "flex-wrap"} ${words.length === 2 && "flex-col"} h-full items-center justify-center text-5xl ${words.length > 2 ? "lg:text-7xl 2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
+                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${isWordOverflowing.includes(true) ? "flex-col flex-nowrap" : "flex-wrap"} ${words.length === 2 && "flex-col"} h-full items-center justify-center text-5xl ${words.length === 2 && "lg:text-7xl"} ${words.length > 2 ? "2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
                 >
                     {words.map((word, wordIndex) => (
-                        <div
-                            key={wordIndex}
-                            ref={wordRefs[wordIndex]}
-                            className={`flex flex-col gap-4 items-center justify-center w-1/2 h-1/2`}
-                        >
-                            <div>
-                                {[...word].map((letter, i) => (
-                                    <span
-                                        key={i}
-                                        className={`transition-colors ${
-                                            affectedIndices[
-                                                wordIndex
-                                            ]?.includes(i)
-                                                ? "text-muted-foreground"
-                                                : "text-inherit"
-                                        }`}
-                                    >
-                                        {letter}
-                                    </span>
-                                ))}
-                            </div>
-                            <div className="text-lg font-normal text-center">
-                                <span className="font-bold">Goal:</span>{" "}
-                                {level.words[wordIndex].initialWord} →{" "}
-                                {level.words[wordIndex].targetWord}
-                            </div>
-                        </div>
+                        <Fragment key={wordIndex}>
+                            <Word
+                                word={word}
+                                wordIndex={wordIndex}
+                                refs={wordRefs}
+                                affectedIndices={affectedIndices}
+                                level={level}
+                            />
+                            <Word
+                                word={word}
+                                wordIndex={wordIndex}
+                                refs={measureRefs}
+                                affectedIndices={affectedIndices}
+                                level={level}
+                                measure
+                            />
+                        </Fragment>
                     ))}
                     <Button
                         className="ml-6 mb-6 2xl:hidden absolute top-0 right-0"
@@ -661,7 +659,7 @@ export default function LevelPage({
                 {/* </div> */}
                 <motion.div
                     layout
-                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-0 2xl:min-h-80 overflow-auto"
+                    className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-50 overflow-auto"
                 >
                     <div className="md:grid md:grid-cols-3 lg:flex lg:justify-between">
                         <h2 className="col-start-2 text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
