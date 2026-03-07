@@ -15,7 +15,7 @@ export default function LevelLayout({
     const [completed, setCompleted] = useState(false);
 
     return (
-        <div className="grid grid-rows-[auto_1fr] h-svh">
+        <div className="grid grid-rows-[auto_1fr] min-h-svh">
             <Header
                 levelNum={Number.parseInt(levelNum)}
                 level={level}
