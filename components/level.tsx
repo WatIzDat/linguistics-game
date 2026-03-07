@@ -28,7 +28,7 @@ import {
 import { motion } from "motion/react";
 import { InfoIcon, RotateCcwIcon } from "lucide-react";
 import { Howl, Howler } from "howler";
-import { usePrevious } from "@/lib/utils";
+import { isNumeric, usePrevious } from "@/lib/utils";
 import { isEqual } from "lodash-es";
 import {
     Tooltip,
@@ -189,7 +189,7 @@ export default function LevelPage({
     setCompleted,
 }: {
     level: Level;
-    levelNum: number;
+    levelNum: string;
     setCompleted: Dispatch<SetStateAction<boolean>>;
 }) {
     // const rules = [
@@ -242,6 +242,10 @@ export default function LevelPage({
     Howler.volume(0.5);
 
     const prevItems = usePrevious(items);
+
+    const levelNumInt = isNumeric(levelNum) ? Number.parseInt(levelNum) : null;
+
+    console.log(levelNumInt);
 
     useEffect(() => {
         // console.log(items);
@@ -298,10 +302,15 @@ export default function LevelPage({
 
                 isFirstSuccessRef.current = false;
 
-                if (levelNum === NUM_LEVELS) {
-                    localStorage.removeItem("level");
-                } else {
-                    localStorage.setItem("level", (levelNum + 1).toString());
+                if (levelNumInt !== null) {
+                    if (levelNumInt === NUM_LEVELS) {
+                        localStorage.removeItem("level");
+                    } else {
+                        localStorage.setItem(
+                            "level",
+                            (levelNumInt + 1).toString(),
+                        );
+                    }
                 }
             }, 1000);
         } else {
@@ -642,7 +651,7 @@ export default function LevelPage({
                     >
                         <RotateCcwIcon />
                     </Button>
-                    {levelNum >= 5 && (
+                    {(levelNumInt === null || levelNumInt >= 5) && (
                         <HybridTooltip>
                             <HybridTooltipTrigger asChild>
                                 <Button
@@ -672,7 +681,7 @@ export default function LevelPage({
                         <h2 className="col-start-2 text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                             Changes
                         </h2>
-                        {levelNum >= 5 && (
+                        {(levelNumInt === null || levelNumInt >= 5) && (
                             <HybridTooltip>
                                 <HybridTooltipTrigger asChild>
                                     <Button

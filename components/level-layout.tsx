@@ -17,12 +17,12 @@ export default function LevelLayout({
     return (
         <div className="grid grid-rows-[auto_1fr] min-h-svh">
             <Header
-                levelNum={Number.parseInt(levelNum)}
+                levelNum={levelNum}
                 level={level}
                 levelCompleted={completed}
             />
             <LevelPage
-                levelNum={Number.parseInt(levelNum)}
+                levelNum={levelNum}
                 level={level}
                 setCompleted={setCompleted}
             />

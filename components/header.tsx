@@ -3,16 +3,19 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Level, NUM_LEVELS } from "@/lib/level";
+import { isNumeric } from "@/lib/utils";
 
 export default function Header({
     levelNum,
     level,
     levelCompleted,
 }: {
-    levelNum: number;
+    levelNum: string;
     level: Level;
     levelCompleted: boolean;
 }) {
+    const levelNumInt = isNumeric(levelNum) ? Number.parseInt(levelNum) : null;
+
     return (
         <div>
             <div className="flex flex-col lg:grid lg:grid-cols-3 items-center justify-between px-4 pt-4 lg:px-12 lg:pt-12">
@@ -36,16 +39,18 @@ export default function Header({
                         // >
                         //     Next
                         // </Button> */}
-                    <Link
-                        className={`text-3xl px-2 pt-2 lg:pb-2 ${levelCompleted ? "block lg:visible" : "hidden lg:invisible"}`}
-                        href={
-                            levelNum === NUM_LEVELS
-                                ? "/end"
-                                : `/${levelNum + 1}`
-                        }
-                    >
-                        next
-                    </Link>
+                    {levelNumInt !== null && (
+                        <Link
+                            className={`text-3xl px-2 pt-2 lg:pb-2 ${levelCompleted ? "block lg:visible" : "hidden lg:invisible"}`}
+                            href={
+                                levelNumInt === NUM_LEVELS
+                                    ? "/end"
+                                    : `/${levelNumInt + 1}`
+                            }
+                        >
+                            next
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>
