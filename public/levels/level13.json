@@ -1,34 +1,26 @@
 {
-    "name": "preservation",
+    "name": "same difference",
     "words": [
         {
-            "initialWord": "start",
-            "targetWord": "detour"
+            "initialWord": "changes",
+            "targetWord": "same"
         },
         {
-            "initialWord": "detour",
-            "targetWord": "detour"
-        },
-        {
-            "initialWord": "end",
-            "targetWord": "start"
+            "initialWord": "same",
+            "targetWord": "same"
         }
     ],
     "rules": [
-        { "pattern": "t", "replacement": "", "environment": "V _" },
-        { "pattern": "", "replacement": "a", "environment": "C _ C" },
-        { "pattern": "t", "replacement": "a", "environment": "_ n" },
-        { "pattern": "uu", "replacement": "u" },
-        { "pattern": "n", "replacement": "r" },
-        { "pattern": "", "replacement": "s", "environment": "# _" },
-        { "pattern": "", "replacement": "a", "environment": "_ s" },
-        { "pattern": "s", "replacement": "d" },
-        { "pattern": "a", "replacement": "" },
-        { "pattern": "e", "replacement": "t" },
-        { "pattern": "", "replacement": "d", "environment": "# _" },
-        { "pattern": "VV", "replacement": "ou" },
-        { "pattern": "stt", "replacement": "de" },
-        { "pattern": "d", "replacement": "t" },
-        { "pattern": "", "replacement": "t", "environment": "e _ o" }
+        { "pattern": "ch", "replacement": "s" },
+        { "pattern": "ng", "replacement": "m" },
+        { "pattern": "s", "replacement": "" },
+        { "pattern": "a", "replacement": "d" },
+        { "pattern": "d", "replacement": "a", "environment": "_ C" },
+        { "pattern": "d", "replacement": "s" },
+        { "pattern": "m", "replacement": "i", "environment": "#C _" },
+        { "pattern": "e", "replacement": "ff" },
+        { "pattern": "ff", "replacement": "e", "environment": "C _" },
+        { "pattern": "ff", "replacement": "me" },
+        { "pattern": "i", "replacement": "a" }
     ]
 }
