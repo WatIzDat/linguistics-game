@@ -1,0 +1,43 @@
+{
+    "name": "the end",
+    "words": [
+        {
+            "initialWord": "chain",
+            "targetWord": "thank"
+        },
+        {
+            "initialWord": "arrow",
+            "targetWord": "you"
+        },
+        {
+            "initialWord": "ling",
+            "targetWord": "for"
+        },
+        {
+            "initialWord": "game",
+            "targetWord": "playing"
+        }
+    ],
+    "rules": [
+        { "pattern": "o", "replacement": "i" },
+        { "pattern": "a", "replacement": "o" },
+        { "pattern": "i", "replacement": "e" },
+        { "pattern": "m", "replacement": "rr" },
+        { "pattern": "e", "replacement": "g" },
+        { "pattern": "g", "replacement": "pla", "environment": "_ C" },
+        { "pattern": "pl", "replacement": "", "environment": "C _" },
+        { "pattern": "uw", "replacement": "" },
+        { "pattern": "le", "replacement": "fo" },
+        { "pattern": "o", "replacement": "" },
+        { "pattern": "c", "replacement": "t" },
+        { "pattern": "ou", "replacement": "in", "environment": "Cy _" },
+        { "pattern": "you", "replacement": "k", "environment": "n _" },
+        { "pattern": "", "replacement": "o", "environment": "y _" },
+        { "pattern": "", "replacement": "u", "environment": "yV _" },
+        { "pattern": "", "replacement": "y", "environment": "n _" },
+        { "pattern": "rr", "replacement": "y", "environment": "_ e" },
+        { "pattern": "a", "replacement": "", "environment": "g _" },
+        { "pattern": "ng", "replacement": "r", "environment": "e _" },
+        { "pattern": "e", "replacement": "u", "environment": "VC _" }
+    ]
+}
