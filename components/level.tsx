@@ -246,7 +246,7 @@ export default function LevelPage({
 
     const levelNumInt = isNumeric(levelNum) ? Number.parseInt(levelNum) : null;
 
-    console.log(levelNumInt);
+    // console.log(levelNumInt);
 
     useEffect(() => {
         // console.log(items);
@@ -328,7 +328,7 @@ export default function LevelPage({
         return () => {
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
-    }, [items]);
+    }, [items, viewedRuleIndex]);
 
     // const [ruleButtonHeight, setRuleButtonHeight] = useState(0);
     // const ruleButtonRef = useRef<HTMLElement | null>(null);
@@ -427,7 +427,7 @@ export default function LevelPage({
                 }, 50);
             };
 
-            console.log(i);
+            // console.log(i);
             const observer = new ResizeObserver(() => check(i));
             observer.observe(el);
             check(i);
@@ -500,14 +500,14 @@ export default function LevelPage({
                             //     ),
                             // );
 
-                            setWords(
-                                words.map((w, i) =>
-                                    applyRules(
-                                        items.solution.map((x) => x.rule),
-                                        level.words[i].initialWord,
-                                    ),
-                                ),
-                            );
+                            // setWords(
+                            //     words.map((w, i) =>
+                            //         applyRules(
+                            //             items.solution.map((x) => x.rule),
+                            //             level.words[i].initialWord,
+                            //         ),
+                            //     ),
+                            // );
 
                             setViewedRuleIndex(null);
                         }
@@ -602,30 +602,30 @@ export default function LevelPage({
                                 onClick={(event) => {
                                     event.stopPropagation();
 
-                                    setWords(
-                                        viewedRuleIndex === i
-                                            ? words.map((w, j) =>
-                                                  applyRules(
-                                                      items.solution.map(
-                                                          (x) => x.rule,
-                                                      ),
-                                                      level.words[j]
-                                                          .initialWord,
-                                                  ),
-                                              )
-                                            : words.map((w, j) =>
-                                                  applyRules(
-                                                      items.solution
-                                                          .slice(0, i + 1)
-                                                          .map(
-                                                              (rule) =>
-                                                                  rule.rule,
-                                                          ),
-                                                      level.words[j]
-                                                          .initialWord,
-                                                  ),
-                                              ),
-                                    );
+                                    // setWords(
+                                    //     viewedRuleIndex === i
+                                    //         ? words.map((w, j) =>
+                                    //               applyRules(
+                                    //                   items.solution.map(
+                                    //                       (x) => x.rule,
+                                    //                   ),
+                                    //                   level.words[j]
+                                    //                       .initialWord,
+                                    //               ),
+                                    //           )
+                                    //         : words.map((w, j) =>
+                                    //               applyRules(
+                                    //                   items.solution
+                                    //                       .slice(0, i + 1)
+                                    //                       .map(
+                                    //                           (rule) =>
+                                    //                               rule.rule,
+                                    //                       ),
+                                    //                   level.words[j]
+                                    //                       .initialWord,
+                                    //               ),
+                                    //           ),
+                                    // );
 
                                     setViewedRuleIndex(
                                         viewedRuleIndex === i ? null : i,
