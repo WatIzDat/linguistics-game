@@ -19,9 +19,7 @@ export default function Page() {
                 it really helps me out!
             </p>
             <div className="flex gap-4">
-                <Link href="https://github.com/WatIzDat/linguistics-game">
-                    github
-                </Link>
+                <Link href="https://github.com/WatIzDat/chainling">github</Link>
                 <Link href="/">home</Link>
             </div>
         </main>

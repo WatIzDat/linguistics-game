@@ -26,8 +26,9 @@ export default async function Home() {
                     ))}
                 </div>
             </div>
-            <footer className="mt-6">
+            <footer className="mt-6 flex gap-4">
                 <Link href="/credits">credits</Link>
+                <Link href="https://github.com/WatIzDat/chainling">github</Link>
             </footer>
         </main>
     );
