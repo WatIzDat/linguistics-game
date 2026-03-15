@@ -21,10 +21,10 @@ import { CollisionPriority } from "@dnd-kit/abstract";
 import { Level, NUM_LEVELS } from "@/lib/level";
 import { clearTimeout, setTimeout } from "timers";
 import { motion } from "motion/react";
-import { InfoIcon, RotateCcwIcon } from "lucide-react";
+import { InfoIcon, PlusIcon, RotateCcwIcon } from "lucide-react";
 import { Howl, Howler } from "howler";
 import { isNumeric } from "@/lib/utils";
-import { isEqual } from "lodash-es";
+import { isEqual, max } from "lodash-es";
 import {
     HybridTooltip,
     HybridTooltipContent,
@@ -32,6 +32,15 @@ import {
 } from "./ui/hybrid-tooltip";
 import Word from "./word";
 import { usePrevious } from "@/lib/hooks";
+import {
+    Popover,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTrigger,
+} from "./ui/popover";
+import { Field, FieldGroup, FieldLabel } from "./ui/field";
+import { Input } from "./ui/input";
+import Form from "next/form";
 
 function SortableButton({
     children,
@@ -138,6 +147,8 @@ export default function LevelPage({
         ? useState<{ id: number; rule: Rule }[]>([])
         : [level.rules.map((rule, i) => ({ id: i, rule })), null];
 
+    const maxRuleIdRef = editor ? useRef(0) : null;
+
     const [items, setItems] = useState<{
         bank: { id: number; rule: Rule }[];
         solution: { id: number; rule: Rule }[];
@@ -157,6 +168,9 @@ export default function LevelPage({
                 (rule) => !rules.map((r) => r.id).includes(rule.id),
             );
 
+            maxRuleIdRef!.current =
+                max(addedRules.map((r) => r.id)) ?? maxRuleIdRef!.current;
+
             setItems({
                 bank: [
                     ...items.bank.filter(
@@ -170,7 +184,7 @@ export default function LevelPage({
                         (rule) =>
                             !removedRules?.map((r) => r.id).includes(rule.id),
                     ),
-                    ...addedRules,
+                    // ...addedRules,
                 ],
             });
         }, [rules]);
@@ -538,24 +552,125 @@ export default function LevelPage({
                         <h2 className="col-start-2 text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                             Changes
                         </h2>
-                        {(levelNumInt === null || levelNumInt >= 5) && (
-                            <HybridTooltip>
-                                <HybridTooltipTrigger asChild>
+                        {editor ? (
+                            <Popover>
+                                <PopoverTrigger asChild>
                                     <Button
                                         variant="ghost"
                                         className="max-md:hidden mr-6 mt-6 ml-auto"
                                     >
-                                        <InfoIcon />
+                                        <PlusIcon />
                                     </Button>
-                                </HybridTooltipTrigger>
-                                <HybridTooltipContent
-                                    className="w-fit bg-black text-white"
-                                    side="top"
-                                >
-                                    <p>V: a, e, i, o, and u</p>
-                                    <p>C: everything else</p>
-                                </HybridTooltipContent>
-                            </HybridTooltip>
+                                </PopoverTrigger>
+                                <PopoverContent side="left">
+                                    <PopoverHeader>add rule</PopoverHeader>
+                                    <Form
+                                        action={(e) => {
+                                            console.log(e);
+
+                                            const environmentBefore = e
+                                                .get("environmentBefore")
+                                                ?.toString();
+                                            const environmentAfter = e
+                                                .get("environmentAfter")
+                                                ?.toString();
+
+                                            setRules!([
+                                                ...rules,
+                                                {
+                                                    id:
+                                                        maxRuleIdRef!.current +
+                                                        1,
+                                                    rule: {
+                                                        pattern: e
+                                                            .get("pattern")
+                                                            ?.toString()!,
+                                                        replacement: e
+                                                            .get("replacement")
+                                                            ?.toString()!,
+                                                        environment:
+                                                            environmentBefore ||
+                                                            environmentAfter
+                                                                ? `${environmentBefore} _ ${environmentAfter}`
+                                                                : null,
+                                                    },
+                                                },
+                                            ]);
+                                        }}
+                                    >
+                                        <FieldGroup className="gap-4">
+                                            <Field orientation="horizontal">
+                                                <FieldLabel
+                                                    htmlFor="pattern"
+                                                    className="w-1/2"
+                                                >
+                                                    pattern
+                                                </FieldLabel>
+                                                <Input
+                                                    id="pattern"
+                                                    name="pattern"
+                                                />
+                                            </Field>
+                                            <Field orientation="horizontal">
+                                                <FieldLabel
+                                                    htmlFor="replacement"
+                                                    className="w-1/2"
+                                                >
+                                                    replacement
+                                                </FieldLabel>
+                                                <Input
+                                                    id="replacement"
+                                                    name="replacement"
+                                                />
+                                            </Field>
+                                            <Field orientation="horizontal">
+                                                <FieldLabel
+                                                    id="environment"
+                                                    className="w-1/2"
+                                                >
+                                                    environment
+                                                </FieldLabel>
+                                                <Input
+                                                    id="environmentBefore"
+                                                    name="environmentBefore"
+                                                    aria-labelledby="environment"
+                                                />
+                                                _
+                                                <Input
+                                                    id="environmentAfter"
+                                                    name="environmentAfter"
+                                                    aria-labelledby="environment"
+                                                />
+                                            </Field>
+                                            <Field>
+                                                <Button type="submit">
+                                                    add
+                                                </Button>
+                                            </Field>
+                                        </FieldGroup>
+                                    </Form>
+                                </PopoverContent>
+                            </Popover>
+                        ) : (
+                            (levelNumInt === null || levelNumInt >= 5) && (
+                                <HybridTooltip>
+                                    <HybridTooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            className="max-md:hidden mr-6 mt-6 ml-auto"
+                                        >
+                                            <InfoIcon />
+                                        </Button>
+                                    </HybridTooltipTrigger>
+                                    <HybridTooltipContent
+                                        className="w-fit bg-black text-white"
+                                        side="top"
+                                    >
+                                        <p>V: a, e, i, o, and u</p>
+                                        <p>C: everything else</p>
+                                    </HybridTooltipContent>
+                                </HybridTooltip>
+                            )
                         )}
                     </div>
                     <Column
