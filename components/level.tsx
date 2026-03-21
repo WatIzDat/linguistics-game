@@ -25,7 +25,14 @@ import { CollisionPriority } from "@dnd-kit/abstract";
 import { Level, NUM_LEVELS } from "@/lib/level";
 import { clearTimeout, setTimeout } from "timers";
 import { motion } from "motion/react";
-import { Edit2Icon, InfoIcon, PlusIcon, RotateCcwIcon } from "lucide-react";
+import {
+    Edit2Icon,
+    InfoIcon,
+    PlusIcon,
+    RotateCcwIcon,
+    Trash2Icon,
+    TrashIcon,
+} from "lucide-react";
 import { Howl, Howler } from "howler";
 import { isNumeric } from "@/lib/utils";
 import { isEqual, max } from "lodash-es";
@@ -464,7 +471,7 @@ export default function LevelPage({
         return () => cleanup.forEach((c) => c());
     }, [words]);
 
-    const [editMode, setEditMode] = editor ? useState(false) : [null, null];
+    const [deleteMode, setDeleteMode] = editor ? useState(false) : [null, null];
 
     return (
         <DragDropProvider
@@ -532,7 +539,7 @@ export default function LevelPage({
                                         sortableId={rule.id}
                                         index={i}
                                         group="solution"
-                                        className={`h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none ${viewedRuleIndex !== null && i <= viewedRuleIndex ? "bg-muted-foreground" : ""} ${viewedRuleIndex !== null && i === viewedRuleIndex ? "border-white border-4" : ""}`}
+                                        className={`h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none ${viewedRuleIndex !== null && i <= viewedRuleIndex ? "bg-muted-foreground" : ""} ${viewedRuleIndex !== null && i === viewedRuleIndex ? "border-white border-4" : ""} ${deleteMode && "bg-red-500"} `}
                                         onClick={(event) => {
                                             event.stopPropagation();
 
@@ -542,7 +549,14 @@ export default function LevelPage({
                                                     : i,
                                             );
 
-                                            onClick(event);
+                                            deleteMode
+                                                ? setRules!(
+                                                      rules.filter(
+                                                          (r) =>
+                                                              r.id !== rule.id,
+                                                      ),
+                                                  )
+                                                : onClick(event);
                                         }}
                                     >
                                         {formatRule(rule.rule)}
@@ -712,9 +726,9 @@ export default function LevelPage({
                                 <Button
                                     variant="ghost"
                                     className="max-md:hidden mr-6 mt-6"
-                                    onClick={() => setEditMode!(!editMode)}
+                                    onClick={() => setDeleteMode!(!deleteMode)}
                                 >
-                                    <Edit2Icon />
+                                    <TrashIcon />
                                 </Button>
                                 <RulePopover
                                     type="add"
@@ -787,8 +801,19 @@ export default function LevelPage({
                                             sortableId={rule.id}
                                             index={i}
                                             group="bank"
-                                            className="w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
-                                            onClick={onClick}
+                                            className={`w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none ${deleteMode && "bg-red-500"}`}
+                                            onClick={
+                                                deleteMode
+                                                    ? () =>
+                                                          setRules!(
+                                                              rules.filter(
+                                                                  (r) =>
+                                                                      r.id !==
+                                                                      rule.id,
+                                                              ),
+                                                          )
+                                                    : onClick
+                                            }
                                             onPointerOver={() =>
                                                 setAffectedIndices(
                                                     words.map(
