@@ -8,6 +8,8 @@ export default function Word({
     affectedIndices,
     // level,
     wordConfigs,
+    deleteMode,
+    deleteWord,
     measure,
 }: {
     word: string;
@@ -16,6 +18,8 @@ export default function Word({
     affectedIndices: number[][];
     // level: Level;
     wordConfigs: { initialWord: string; targetWord: string }[];
+    deleteMode?: boolean | null;
+    deleteWord?: () => any;
     measure?: boolean;
 }) {
     return (
@@ -24,7 +28,8 @@ export default function Word({
             ref={(el) => {
                 refs.current[wordIndex] = el;
             }}
-            className={`flex flex-col gap-4 items-center justify-center ${measure ? "fixed invisible w-auto" : "w-1/2 h-1/2"}`}
+            className={`flex flex-col gap-4 items-center justify-center ${measure ? "fixed invisible w-auto" : "w-1/2 h-1/2"} ${deleteMode && "text-red-500"}`}
+            onClick={deleteMode ? deleteWord : undefined}
         >
             <div className="text-center">
                 {[...word].map((letter, i) => (

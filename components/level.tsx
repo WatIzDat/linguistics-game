@@ -19,6 +19,7 @@ import {
     ClassAttributes,
     forwardRef,
     useCallback,
+    useMemo,
 } from "react";
 import { Button } from "./ui/button";
 import { CollisionPriority } from "@dnd-kit/abstract";
@@ -263,49 +264,6 @@ export default function LevelPage({
 
     const maxWordIdRef = editor ? useRef(0) : null;
 
-    if (editor) {
-        useEffect(() => {
-            setWords(
-                wordConfigs.map((w) => ({
-                    id: w.id,
-                    word: w.initialWord,
-                })),
-            );
-
-            maxWordIdRef!.current =
-                max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
-
-            console.log(words);
-
-            wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
-            measureRefs.current = [...Array(wordConfigs.length)].map(
-                (_) => null,
-            );
-
-            isWordOverflowingRef.current = [...Array(wordConfigs.length)].map(
-                (_) => false,
-            );
-            setIsWordOverflowing(
-                [...Array(wordConfigs.length)].map((_) => false),
-            );
-
-            // wordRefs = [...Array(wordConfigs.length)].map((_) =>
-            //     useRef<HTMLDivElement>(null),
-            // );
-
-            // measureRefs = [...Array(wordConfigs.length)].map((_) =>
-            //     useRef<HTMLDivElement>(null),
-            // );
-
-            // isWordOverflowingRef = useRef(
-            //     [...Array(wordConfigs.length)].map((_) => false),
-            // );
-            // [isWordOverflowing, setIsWordOverflowing] = useState(
-            //     [...Array(wordConfigs.length)].map((_) => false),
-            // );
-        }, [wordConfigs]);
-    }
-
     const [affectedIndices, setAffectedIndices] = useState<number[][]>([]);
 
     const [viewedRuleIndex, setViewedRuleIndex] = useState<number | null>(null);
@@ -472,6 +430,49 @@ export default function LevelPage({
         [...Array(wordConfigs.length)].map((_) => false),
     );
 
+    if (editor) {
+        useMemo(() => {
+            setWords(
+                wordConfigs.map((w) => ({
+                    id: w.id,
+                    word: w.initialWord,
+                })),
+            );
+
+            maxWordIdRef!.current =
+                max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
+
+            console.log(words);
+
+            wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
+            measureRefs.current = [...Array(wordConfigs.length)].map(
+                (_) => null,
+            );
+
+            isWordOverflowingRef.current = [...Array(wordConfigs.length)].map(
+                (_) => false,
+            );
+            setIsWordOverflowing(
+                [...Array(wordConfigs.length)].map((_) => false),
+            );
+
+            // wordRefs = [...Array(wordConfigs.length)].map((_) =>
+            //     useRef<HTMLDivElement>(null),
+            // );
+
+            // measureRefs = [...Array(wordConfigs.length)].map((_) =>
+            //     useRef<HTMLDivElement>(null),
+            // );
+
+            // isWordOverflowingRef = useRef(
+            //     [...Array(wordConfigs.length)].map((_) => false),
+            // );
+            // [isWordOverflowing, setIsWordOverflowing] = useState(
+            //     [...Array(wordConfigs.length)].map((_) => false),
+            // );
+        }, [wordConfigs]);
+    }
+
     useEffect(() => {
         const cleanup = wordRefs.current.map((ref, i) => {
             const el = ref;
@@ -636,7 +637,7 @@ export default function LevelPage({
                 </motion.div>
                 <motion.div
                     layout
-                    className={`relative transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${isWordOverflowing.includes(true) ? "flex-col flex-nowrap" : "flex-wrap"} ${words.length === 2 && "flex-col"} h-full items-center justify-center text-5xl ${words.length === 2 && "lg:text-7xl"} ${words.length > 2 ? "2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
+                    className={`relative overflow-auto transition-colors col-start-1 col-end-3 row-start-1 row-end-2 lg:col-start-2 flex lg:max-2xl:flex-col lg:max-2xl:flex-nowrap ${isWordOverflowing.includes(true) ? "flex-col flex-nowrap" : "flex-wrap"} ${words.length === 2 && !editor && "flex-col"} h-full items-center justify-center text-5xl ${words.length === 2 && "lg:text-7xl"} ${words.length > 2 ? "2xl:text-9xl" : "lg:text-9xl"} font-bold ${success && "text-green-500"}`}
                 >
                     {words.map((word, wordIndex) => (
                         <Fragment key={word.id}>
@@ -647,6 +648,14 @@ export default function LevelPage({
                                 affectedIndices={affectedIndices}
                                 // level={level}
                                 wordConfigs={wordConfigs}
+                                deleteMode={deleteMode}
+                                deleteWord={() =>
+                                    setWordConfigs!(
+                                        wordConfigs.filter(
+                                            (w) => w.id !== word.id,
+                                        ),
+                                    )
+                                }
                             />
                             <Word
                                 word={word.word}
@@ -660,66 +669,72 @@ export default function LevelPage({
                         </Fragment>
                     ))}
                     {editor && (
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="ghost">
-                                    <PlusIcon />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent side="left">
-                                <PopoverHeader>add word</PopoverHeader>
-                                <Form
-                                    action={(e) => {
-                                        console.log(e);
+                        <div className="flex items-center justify-center size-1/2">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="ghost">
+                                        <PlusIcon />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="left">
+                                    <PopoverHeader>add word</PopoverHeader>
+                                    <Form
+                                        action={(e) => {
+                                            console.log(e);
 
-                                        setWordConfigs!([
-                                            ...wordConfigs,
-                                            {
-                                                id: maxWordIdRef!.current + 1,
-                                                initialWord:
-                                                    e
-                                                        .get("initialWord")
-                                                        ?.toString() ?? "",
-                                                targetWord:
-                                                    e
-                                                        .get("targetWord")
-                                                        ?.toString() ?? "",
-                                            },
-                                        ]);
-                                    }}
-                                >
-                                    <FieldGroup className="gap-4">
-                                        <Field orientation="horizontal">
-                                            <FieldLabel
-                                                htmlFor="initialWord"
-                                                className="w-1/2"
-                                            >
-                                                initial word
-                                            </FieldLabel>
-                                            <Input
-                                                id="initialWord"
-                                                name="initialWord"
-                                            />
-                                        </Field>
-                                        <Field orientation="horizontal">
-                                            <FieldLabel
-                                                htmlFor="targetWord"
-                                                className="w-1/2"
-                                            >
-                                                target word
-                                            </FieldLabel>
-                                            <Input
-                                                id="targetWord"
-                                                name="targetWord"
-                                            />
-                                        </Field>
-                                        <Field>
-                                            <Button type="submit">add</Button>
-                                        </Field>
-                                    </FieldGroup>
-                                </Form>
-                            </PopoverContent>
-                        </Popover>
+                                            setWordConfigs!([
+                                                ...wordConfigs,
+                                                {
+                                                    id:
+                                                        maxWordIdRef!.current +
+                                                        1,
+                                                    initialWord:
+                                                        e
+                                                            .get("initialWord")
+                                                            ?.toString() ?? "",
+                                                    targetWord:
+                                                        e
+                                                            .get("targetWord")
+                                                            ?.toString() ?? "",
+                                                },
+                                            ]);
+                                        }}
+                                    >
+                                        <FieldGroup className="gap-4">
+                                            <Field orientation="horizontal">
+                                                <FieldLabel
+                                                    htmlFor="initialWord"
+                                                    className="w-1/2"
+                                                >
+                                                    initial word
+                                                </FieldLabel>
+                                                <Input
+                                                    id="initialWord"
+                                                    name="initialWord"
+                                                />
+                                            </Field>
+                                            <Field orientation="horizontal">
+                                                <FieldLabel
+                                                    htmlFor="targetWord"
+                                                    className="w-1/2"
+                                                >
+                                                    target word
+                                                </FieldLabel>
+                                                <Input
+                                                    id="targetWord"
+                                                    name="targetWord"
+                                                />
+                                            </Field>
+                                            <Field>
+                                                <Button type="submit">
+                                                    add
+                                                </Button>
+                                            </Field>
+                                        </FieldGroup>
+                                    </Form>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
                     )}
                     <Button
                         className="ml-6 mb-6 2xl:hidden absolute top-0 right-0"
