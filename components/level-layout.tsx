@@ -21,16 +21,33 @@ export default function LevelLayout({
           levelNum?: undefined;
       }) {
     const [completed, setCompleted] = useState(false);
+    const [verified, setVerified] = useState(false);
+    const [levelCode, setLevelCode] = useState("");
 
     return (
         <div className="grid grid-rows-[auto_1fr] min-h-svh">
-            <Header
-                levelNum={editor ? "editor" : levelNum}
-                levelName={editor ? "make your own level!" : level.name}
-                levelCompleted={completed}
-            />
             {editor ? (
-                <LevelPage editor={true} />
+                <Header
+                    editor={true}
+                    levelNum={"editor"}
+                    levelName={"make your own level!"}
+                    levelVerified={verified}
+                    levelCode={levelCode}
+                />
+            ) : (
+                <Header
+                    editor={false}
+                    levelNum={levelNum}
+                    levelName={level.name}
+                    levelCompleted={completed}
+                />
+            )}
+            {editor ? (
+                <LevelPage
+                    editor={true}
+                    setVerified={setVerified}
+                    setLevelCode={setLevelCode}
+                />
             ) : (
                 <LevelPage
                     editor={false}

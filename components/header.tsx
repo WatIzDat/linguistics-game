@@ -4,16 +4,38 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Level, NUM_LEVELS } from "@/lib/level";
 import { isNumeric } from "@/lib/utils";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "./ui/dialog";
 
 export default function Header({
+    editor,
     levelNum,
     levelName,
     levelCompleted,
-}: {
-    levelNum: string;
-    levelName: string;
-    levelCompleted: boolean;
-}) {
+    levelVerified,
+    levelCode,
+}:
+    | {
+          editor: false;
+          levelNum: string;
+          levelName: string;
+          levelCompleted: boolean;
+          levelVerified?: undefined;
+          levelCode?: undefined;
+      }
+    | {
+          editor: true;
+          levelNum: string;
+          levelName: string;
+          levelCompleted?: undefined;
+          levelVerified: boolean;
+          levelCode: string;
+      }) {
     const levelNumInt = isNumeric(levelNum) ? Number.parseInt(levelNum) : null;
 
     return (
@@ -32,17 +54,35 @@ export default function Header({
                     <p className="text-center">{levelName}</p>
                 </header>
                 <div className="flex flex-row-reverse gap-4 text-lg">
-                    {levelNumInt !== null && (
-                        <Link
-                            className={`text-3xl px-2 pt-2 lg:pb-2 ${levelCompleted ? "block lg:visible" : "hidden lg:invisible"}`}
-                            href={
-                                levelNumInt === NUM_LEVELS
-                                    ? "/end"
-                                    : `/${levelNumInt + 1}`
-                            }
-                        >
-                            next
-                        </Link>
+                    {editor ? (
+                        <Dialog>
+                            <DialogTrigger
+                                className={`text-3xl px-2 pt-2 lg:pb-2 ${levelVerified ? "block lg:visible" : "hidden lg:invisible"}`}
+                            >
+                                export
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>export level</DialogTitle>
+                                </DialogHeader>
+                                <code className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto">
+                                    {levelCode}
+                                </code>
+                            </DialogContent>
+                        </Dialog>
+                    ) : (
+                        levelNumInt !== null && (
+                            <Link
+                                className={`text-3xl px-2 pt-2 lg:pb-2 ${levelCompleted ? "block lg:visible" : "hidden lg:invisible"}`}
+                                href={
+                                    levelNumInt === NUM_LEVELS
+                                        ? "/end"
+                                        : `/${levelNumInt + 1}`
+                                }
+                            >
+                                next
+                            </Link>
+                        )
                     )}
                 </div>
             </div>

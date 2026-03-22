@@ -149,18 +149,24 @@ export default function LevelPage({
     level,
     levelNum,
     setCompleted,
+    setVerified,
+    setLevelCode,
 }:
     | {
           editor: false;
           level: Level;
           levelNum: string;
           setCompleted: Dispatch<SetStateAction<boolean>>;
+          setVerified?: undefined;
+          setLevelCode?: undefined;
       }
     | {
           editor: true;
           level?: undefined;
           levelNum?: undefined;
           setCompleted?: undefined;
+          setVerified: Dispatch<SetStateAction<boolean>>;
+          setLevelCode: Dispatch<SetStateAction<string>>;
       }) {
     // if (editor) {
     //     const [createdLevel, setCreatedLevel] = useState();
@@ -288,6 +294,25 @@ export default function LevelPage({
     const [viewedRuleIndex, setViewedRuleIndex] = useState<number | null>(null);
 
     const [success, setSuccess] = useState(false);
+
+    if (editor) {
+        useEffect(() => {
+            setVerified(success);
+
+            if (success) {
+                setLevelCode(
+                    JSON.stringify({
+                        name: "new level",
+                        words: wordConfigs.map((w) => ({
+                            initialWord: w.initialWord,
+                            targetWord: w.targetWord,
+                        })),
+                        rules: rules.map((r) => r.rule),
+                    }),
+                );
+            }
+        }, [success]);
+    }
 
     const isFirstSuccessRef = useRef(true);
 
