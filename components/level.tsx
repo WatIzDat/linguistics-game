@@ -181,7 +181,9 @@ export default function LevelPage({
 
             const newRules = level.rules.map((rule, i) => ({ id: i, rule }));
 
+            replaceRulesRef!.current = true;
             setRules!(newRules);
+
             setWordConfigs!(
                 level.words.map((w, i) => ({
                     id: i,
@@ -193,9 +195,12 @@ export default function LevelPage({
         }, [level]);
 
         useEffect(() => {
+            console.log("local storage");
+
             const storedRules = localStorage.getItem("editorRules");
 
             if (storedRules) {
+                console.log(JSON.parse(storedRules));
                 setRules!(JSON.parse(storedRules));
             }
 
@@ -221,10 +226,41 @@ export default function LevelPage({
         solution: [],
     });
 
+    const replaceRulesRef = editor ? useRef(false) : null;
+    const isFirstRuleEffectUpdateRef = editor ? useRef(true) : null;
+
     if (editor) {
         const prevRules = usePrevious(rules);
 
         useEffect(() => {
+            if (isFirstRuleEffectUpdateRef!.current) {
+                isFirstRuleEffectUpdateRef!.current = false;
+
+                return;
+            }
+
+            console.log(rules);
+
+            localStorage.setItem("editorRules", JSON.stringify(rules));
+
+            if (rules.length === 0 && wordConfigs.length === 0) {
+                setDeleteMode!(false);
+            }
+
+            if (replaceRulesRef!.current) {
+                setItems({
+                    bank: rules,
+                    solution: [],
+                });
+
+                replaceRulesRef!.current = false;
+
+                maxRuleIdRef!.current =
+                    max(rules.map((r) => r.id)) ?? maxRuleIdRef!.current;
+
+                return;
+            }
+
             const addedRules = rules.filter(
                 (rule) => !prevRules?.map((r) => r.id).includes(rule.id),
             );
@@ -259,8 +295,6 @@ export default function LevelPage({
                     // ...addedRules,
                 ],
             });
-
-            localStorage.setItem("editorRules", JSON.stringify(rules));
         }, [rules]);
     }
 
@@ -369,54 +403,52 @@ export default function LevelPage({
                 swapSound.play();
             }
 
-            if (newWords.length > 0) {
-                let allEqual = true;
+            let allEqual = true;
 
-                for (let i = 0; i < newWords.length; i++) {
-                    if (newWords[i].word !== wordConfigs[i].targetWord) {
-                        allEqual = false;
+            for (let i = 0; i < newWords.length; i++) {
+                if (newWords[i].word !== wordConfigs[i].targetWord) {
+                    allEqual = false;
 
-                        break;
-                    }
+                    break;
+                }
+            }
+
+            if (allEqual && newWords.length > 0) {
+                if (timeoutRef.current !== null) {
+                    clearTimeout(timeoutRef.current);
                 }
 
-                if (allEqual) {
-                    if (timeoutRef.current !== null) {
-                        clearTimeout(timeoutRef.current);
+                timeoutRef.current = setTimeout(() => {
+                    setSuccess(true);
+
+                    if (!editor) {
+                        setCompleted(true);
                     }
 
-                    timeoutRef.current = setTimeout(() => {
-                        setSuccess(true);
-
-                        if (!editor) {
-                            setCompleted(true);
-                        }
-
-                        if ((editor && !success) || isFirstSuccessRef.current) {
-                            successSound.play();
-                        }
-
-                        isFirstSuccessRef.current = false;
-
-                        if (levelNumInt !== null) {
-                            if (levelNumInt === NUM_LEVELS) {
-                                localStorage.removeItem("level");
-                            } else {
-                                localStorage.setItem(
-                                    "level",
-                                    (levelNumInt + 1).toString(),
-                                );
-                            }
-                        }
-                    }, 1000);
-                } else {
-                    setSuccess(false);
-
-                    if (timeoutRef.current !== null) {
-                        clearTimeout(timeoutRef.current);
-
-                        timeoutRef.current = null;
+                    if ((editor && !success) || isFirstSuccessRef.current) {
+                        successSound.play();
                     }
+
+                    isFirstSuccessRef.current = false;
+
+                    if (levelNumInt !== null) {
+                        if (levelNumInt === NUM_LEVELS) {
+                            localStorage.removeItem("level");
+                        } else {
+                            localStorage.setItem(
+                                "level",
+                                (levelNumInt + 1).toString(),
+                            );
+                        }
+                    }
+                }, 1000);
+            } else {
+                setSuccess(false);
+
+                if (timeoutRef.current !== null) {
+                    clearTimeout(timeoutRef.current);
+
+                    timeoutRef.current = null;
                 }
             }
 
@@ -460,23 +492,26 @@ export default function LevelPage({
                 })),
             );
 
-            maxWordIdRef!.current =
-                max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
+            // maxWordIdRef!.current =
+            //     max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
 
-            console.log(words);
+            // console.log(words);
 
-            wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
-            measureRefs.current = [...Array(wordConfigs.length)].map(
-                (_) => null,
-            );
+            // wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
+            // measureRefs.current = [...Array(wordConfigs.length)].map(
+            //     (_) => null,
+            // );
 
-            isWordOverflowingRef.current = [...Array(wordConfigs.length)].map(
-                (_) => false,
-            );
-            setIsWordOverflowing(
-                [...Array(wordConfigs.length)].map((_) => false),
-            );
+            // isWordOverflowingRef.current = [...Array(wordConfigs.length)].map(
+            //     (_) => false,
+            // );
+            // setIsWordOverflowing(
+            //     [...Array(wordConfigs.length)].map((_) => false),
+            // );
 
+            // if (rules.length === 0 && wordConfigs.length === 0) {
+            //     setDeleteMode!(false);
+            // }
             // wordRefs = [...Array(wordConfigs.length)].map((_) =>
             //     useRef<HTMLDivElement>(null),
             // );
@@ -493,7 +528,37 @@ export default function LevelPage({
             // );
         }, [wordConfigs]);
 
+        const isFirstWordEffectUpdateRef = useRef(true);
+
         useEffect(() => {
+            if (isFirstWordEffectUpdateRef.current) {
+                isFirstWordEffectUpdateRef.current = false;
+
+                return;
+            }
+
+            maxWordIdRef!.current =
+                max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
+
+            // console.log(words);
+
+            wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
+            measureRefs.current = [...Array(wordConfigs.length)].map(
+                (_) => null,
+            );
+
+            isWordOverflowingRef.current = [...Array(wordConfigs.length)].map(
+                (_) => false,
+            );
+
+            setIsWordOverflowing(
+                [...Array(wordConfigs.length)].map((_) => false),
+            );
+
+            if (rules.length === 0 && wordConfigs.length === 0) {
+                setDeleteMode!(false);
+            }
+
             localStorage.setItem(
                 "editorWordConfigs",
                 JSON.stringify(wordConfigs),
