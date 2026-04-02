@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Level, NUM_LEVELS } from "@/lib/level";
-import { isNumeric } from "@/lib/utils";
+import { compressString, isNumeric } from "@/lib/utils";
 import {
     Dialog,
     DialogContent,
@@ -15,6 +15,7 @@ import { Textarea } from "./ui/textarea";
 import Form from "next/form";
 import { Field } from "./ui/field";
 import { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header({
     editor,
@@ -44,6 +45,8 @@ export default function Header({
           setLevel: Dispatch<SetStateAction<Level | undefined>>;
       }) {
     const levelNumInt = isNumeric(levelNum) ? Number.parseInt(levelNum) : null;
+
+    const router = useRouter();
 
     return (
         <div>
@@ -92,13 +95,24 @@ export default function Header({
                                         action={(e) => {
                                             // console.log(e.get("levelCode"));
 
-                                            setLevel(
-                                                JSON.parse(
-                                                    e
-                                                        .get("levelCode")
-                                                        ?.toString()!,
-                                                ),
-                                            );
+                                            const action = e.get("action");
+                                            const levelCode = e
+                                                .get("levelCode")
+                                                ?.toString()!;
+
+                                            if (action === "import") {
+                                                compressString(levelCode).then(
+                                                    (code) =>
+                                                        router.push(
+                                                            "level?code=" +
+                                                                encodeURIComponent(
+                                                                    code,
+                                                                ),
+                                                        ),
+                                                );
+                                            } else if (action === "edit") {
+                                                setLevel(JSON.parse(levelCode));
+                                            }
                                         }}
                                     >
                                         <Field>
@@ -109,7 +123,18 @@ export default function Header({
                                             />
                                         </Field>
                                         <Field>
-                                            <Button type="submit">
+                                            <Button
+                                                type="submit"
+                                                name="action"
+                                                value="edit"
+                                            >
+                                                edit
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                                name="action"
+                                                value="import"
+                                            >
                                                 import
                                             </Button>
                                         </Field>
