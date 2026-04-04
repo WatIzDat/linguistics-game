@@ -751,66 +751,74 @@ export default function LevelPage({
                         }}
                     >
                         {items.solution.map((rule, i) => (
-                            <RulePopover
+                            // <RulePopover
+                            //     key={rule.id}
+                            //     type="edit"
+                            //     side="right"
+                            //     customTrigger={(onClick) => (
+                            <SortableButton
                                 key={rule.id}
-                                type="edit"
-                                side="right"
-                                customTrigger={(onClick) => (
-                                    <SortableButton
-                                        // key={rule.id}
-                                        sortableId={rule.id}
-                                        index={i}
-                                        group="solution"
-                                        className={`h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none ${viewedRuleIndex !== null && i <= viewedRuleIndex ? "bg-muted-foreground" : ""} ${viewedRuleIndex !== null && i === viewedRuleIndex ? "border-white border-4" : ""} ${deleteMode && "bg-red-500"} `}
-                                        onClick={(event) => {
-                                            event.stopPropagation();
+                                sortableId={rule.id}
+                                index={i}
+                                group="solution"
+                                className={`h-fit lg:h-full w-full text-xs md:text-sm md:p-4 lg:text-base xl:text-xl select-none ${viewedRuleIndex !== null && i <= viewedRuleIndex ? "bg-muted-foreground" : ""} ${viewedRuleIndex !== null && i === viewedRuleIndex ? "border-white border-4" : ""} ${deleteMode && "bg-red-500"} `}
+                                onClick={(event) => {
+                                    event.stopPropagation();
 
-                                            setViewedRuleIndex(
-                                                viewedRuleIndex === i
-                                                    ? null
-                                                    : i,
-                                            );
+                                    if (deleteMode) {
+                                        setRules!(
+                                            rules.filter(
+                                                (r) => r.id !== rule.id,
+                                            ),
+                                        );
 
-                                            deleteMode
-                                                ? setRules!(
-                                                      rules.filter(
-                                                          (r) =>
-                                                              r.id !== rule.id,
-                                                      ),
-                                                  )
-                                                : onClick(event);
-                                        }}
-                                    >
-                                        {formatRule(rule.rule)}
-                                    </SortableButton>
-                                )}
-                                onSubmit={(
-                                    pattern,
-                                    replacement,
-                                    environmentBefore,
-                                    environmentAfter,
-                                ) =>
-                                    setRules!(
-                                        rules.map((r) =>
-                                            r.id === rule.id
-                                                ? {
-                                                      ...rule,
-                                                      rule: {
-                                                          pattern: pattern,
-                                                          replacement:
-                                                              replacement,
-                                                          environment:
-                                                              environmentBefore ||
-                                                              environmentAfter
-                                                                  ? `${environmentBefore} _ ${environmentAfter}`
-                                                                  : null,
-                                                      },
-                                                  }
-                                                : r,
-                                        ),
-                                    )
-                                }
-                            />
+                                        return;
+                                    }
+
+                                    setViewedRuleIndex(
+                                        viewedRuleIndex === i ? null : i,
+                                    );
+
+                                    // deleteMode
+                                    //     ? setRules!(
+                                    //           rules.filter(
+                                    //               (r) =>
+                                    //                   r.id !== rule.id,
+                                    //           ),
+                                    //       )
+                                    //     : onClick(event);
+                                }}
+                            >
+                                {formatRule(rule.rule)}
+                            </SortableButton>
+                            // )}
+                            //     onSubmit={(
+                            //         pattern,
+                            //         replacement,
+                            //         environmentBefore,
+                            //         environmentAfter,
+                            //     ) =>
+                            //         setRules!(
+                            //             rules.map((r) =>
+                            //                 r.id === rule.id
+                            //                     ? {
+                            //                           ...rule,
+                            //                           rule: {
+                            //                               pattern: pattern,
+                            //                               replacement:
+                            //                                   replacement,
+                            //                               environment:
+                            //                                   environmentBefore ||
+                            //                                   environmentAfter
+                            //                                       ? `${environmentBefore} _ ${environmentAfter}`
+                            //                                       : null,
+                            //                           },
+                            //                       }
+                            //                     : r,
+                            //             ),
+                            //         )
+                            //     }
+                            // />
                         ))}
                     </Column>
                 </motion.div>
