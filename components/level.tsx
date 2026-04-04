@@ -35,7 +35,7 @@ import {
     TrashIcon,
 } from "lucide-react";
 import { Howl, Howler } from "howler";
-import { isNumeric } from "@/lib/utils";
+import { compressString, isNumeric } from "@/lib/utils";
 import { isEqual, max } from "lodash-es";
 import {
     HybridTooltip,
@@ -368,16 +368,21 @@ export default function LevelPage({
 
     if (editor) {
         useEffect(() => {
-            setLevelCode(
-                JSON.stringify({
-                    name: "new level",
-                    words: wordConfigs.map((w) => ({
-                        initialWord: w.initialWord,
-                        targetWord: w.targetWord,
-                    })),
-                    rules: rules.map((r) => r.rule),
-                }),
-            );
+            async function func() {
+                setLevelCode!(
+                    await compressString(
+                        JSON.stringify({
+                            name: "new level",
+                            words: wordConfigs.map((w) => ({
+                                initialWord: w.initialWord,
+                                targetWord: w.targetWord,
+                            })),
+                            rules: rules.map((r) => r.rule),
+                        }),
+                    ),
+                );
+            }
+            func();
         }, [rules, wordConfigs]);
 
         useEffect(() => {

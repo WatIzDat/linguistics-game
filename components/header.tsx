@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Level, NUM_LEVELS } from "@/lib/level";
-import { compressString, isNumeric } from "@/lib/utils";
+import { compressString, decompressString, isNumeric } from "@/lib/utils";
 import {
     Dialog,
     DialogContent,
@@ -101,17 +101,18 @@ export default function Header({
                                                 ?.toString()!;
 
                                             if (action === "import") {
-                                                compressString(levelCode).then(
-                                                    (code) =>
-                                                        router.push(
-                                                            "level?code=" +
-                                                                encodeURIComponent(
-                                                                    code,
-                                                                ),
+                                                router.push(
+                                                    "level?code=" +
+                                                        encodeURIComponent(
+                                                            levelCode,
                                                         ),
                                                 );
                                             } else if (action === "edit") {
-                                                setLevel(JSON.parse(levelCode));
+                                                decompressString(
+                                                    levelCode,
+                                                ).then((code) =>
+                                                    setLevel(JSON.parse(code)),
+                                                );
                                             }
                                         }}
                                     >
