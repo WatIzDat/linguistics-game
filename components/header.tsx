@@ -6,7 +6,9 @@ import { Level, NUM_LEVELS } from "@/lib/level";
 import { compressString, decompressString, isNumeric } from "@/lib/utils";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -76,12 +78,7 @@ export default function Header({
         func();
     }, [newExportedLevel]);
 
-    // const levelCode = useMemo(() => {
-    //     async function func() {
-    //         return await compressString(JSON.stringify(newExportedLevel));
-    //     }
-    //     return func();
-    // }, [newExportedLevel]);
+    const [isCodeCopied, setIsCodeCopied] = useState(false);
 
     return (
         <div>
@@ -111,12 +108,27 @@ export default function Header({
                                     <DialogHeader>
                                         <DialogTitle>export level</DialogTitle>
                                     </DialogHeader>
-                                    <Form
-                                        action={(_) => {
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+
+                                            console.log("test");
+
+                                            setIsCodeCopied(true);
+
                                             navigator.clipboard.writeText(
                                                 levelCode,
                                             );
                                         }}
+                                        className="grid gap-4"
+                                        // action={(_) => {
+                                        //     console.log("test");
+                                        //     setIsCodeCopied(true);
+
+                                        //     navigator.clipboard.writeText(
+                                        //         levelCode,
+                                        //     );
+                                        // }}
                                     >
                                         <FieldGroup>
                                             <Field orientation="horizontal">
@@ -126,6 +138,7 @@ export default function Header({
                                                 <Input
                                                     id="name"
                                                     name="name"
+                                                    defaultValue="new level"
                                                     onChange={(e) => {
                                                         if (!newExportedLevel)
                                                             return;
@@ -135,19 +148,27 @@ export default function Header({
                                                             name: e.target
                                                                 .value,
                                                         });
+
+                                                        setIsCodeCopied(false);
                                                     }}
                                                 />
                                             </Field>
-                                            <code className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto">
+                                            <code className="h-24 rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto">
                                                 {levelCode}
                                             </code>
-                                            <Field>
+                                        </FieldGroup>
+                                        <DialogFooter>
+                                            {isCodeCopied ? (
+                                                <DialogClose asChild>
+                                                    <Button>done</Button>
+                                                </DialogClose>
+                                            ) : (
                                                 <Button type="submit">
                                                     copy
                                                 </Button>
-                                            </Field>
-                                        </FieldGroup>
-                                    </Form>
+                                            )}
+                                        </DialogFooter>
+                                    </form>
                                 </DialogContent>
                             </Dialog>
                             <Dialog>
@@ -184,16 +205,19 @@ export default function Header({
                                                 );
                                             }
                                         }}
+                                        className="grid gap-4"
                                     >
                                         <FieldGroup>
                                             <Field>
                                                 <Textarea
-                                                    className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto"
+                                                    className="h-24 rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto resize-none"
                                                     placeholder="paste level code here"
                                                     name="levelCode"
                                                 />
                                             </Field>
-                                            <Field>
+                                        </FieldGroup>
+                                        <DialogFooter>
+                                            <DialogClose asChild>
                                                 <Button
                                                     type="submit"
                                                     name="action"
@@ -201,15 +225,15 @@ export default function Header({
                                                 >
                                                     edit
                                                 </Button>
-                                                <Button
-                                                    type="submit"
-                                                    name="action"
-                                                    value="import"
-                                                >
-                                                    import
-                                                </Button>
-                                            </Field>
-                                        </FieldGroup>
+                                            </DialogClose>
+                                            <Button
+                                                type="submit"
+                                                name="action"
+                                                value="import"
+                                            >
+                                                import
+                                            </Button>
+                                        </DialogFooter>
                                     </Form>
                                 </DialogContent>
                             </Dialog>
