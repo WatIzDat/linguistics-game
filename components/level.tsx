@@ -151,7 +151,7 @@ export default function LevelPage({
     levelNum,
     setCompleted,
     setVerified,
-    setLevelCode,
+    setExportedLevel,
     saveLevel,
 }:
     | {
@@ -160,7 +160,7 @@ export default function LevelPage({
           levelNum: string;
           setCompleted: Dispatch<SetStateAction<boolean>>;
           setVerified?: undefined;
-          setLevelCode?: undefined;
+          setExportedLevel?: undefined;
           saveLevel?: undefined;
       }
     | {
@@ -169,7 +169,7 @@ export default function LevelPage({
           levelNum?: undefined;
           setCompleted?: undefined;
           setVerified?: Dispatch<SetStateAction<boolean>>;
-          setLevelCode: Dispatch<SetStateAction<string>>;
+          setExportedLevel: Dispatch<SetStateAction<Level | undefined>>;
           saveLevel: boolean;
       }) {
     // if (editor) {
@@ -369,18 +369,14 @@ export default function LevelPage({
     if (editor) {
         useEffect(() => {
             async function func() {
-                setLevelCode!(
-                    await compressString(
-                        JSON.stringify({
-                            name: "new level",
-                            words: wordConfigs.map((w) => ({
-                                initialWord: w.initialWord,
-                                targetWord: w.targetWord,
-                            })),
-                            rules: rules.map((r) => r.rule),
-                        }),
-                    ),
-                );
+                setExportedLevel!({
+                    name: "new level",
+                    words: wordConfigs.map((w) => ({
+                        initialWord: w.initialWord,
+                        targetWord: w.targetWord,
+                    })),
+                    rules: rules.map((r) => r.rule),
+                });
             }
             func();
         }, [rules, wordConfigs]);

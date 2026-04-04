@@ -13,9 +13,10 @@ import {
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 import Form from "next/form";
-import { Field } from "./ui/field";
-import { Dispatch, SetStateAction } from "react";
+import { Field, FieldGroup, FieldLabel } from "./ui/field";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Input } from "./ui/input";
 
 export default function Header({
     editor,
@@ -23,7 +24,7 @@ export default function Header({
     levelName,
     levelCompleted,
     levelVerified,
-    levelCode,
+    exportedLevel,
     setLevel,
 }:
     | {
@@ -32,7 +33,7 @@ export default function Header({
           levelName: string;
           levelCompleted: boolean;
           levelVerified?: undefined;
-          levelCode?: undefined;
+          exportedLevel?: undefined;
           setLevel?: undefined;
       }
     | {
@@ -41,12 +42,46 @@ export default function Header({
           levelName: string;
           levelCompleted?: undefined;
           levelVerified: boolean;
-          levelCode: string;
+          exportedLevel: Level | undefined;
           setLevel: Dispatch<SetStateAction<Level | undefined>>;
       }) {
     const levelNumInt = isNumeric(levelNum) ? Number.parseInt(levelNum) : null;
 
     const router = useRouter();
+
+    const [newExportedLevel, setNewExportedLevel] = useState(exportedLevel);
+
+    useEffect(() => {
+        if (!exportedLevel) {
+            setNewExportedLevel(undefined);
+            return;
+        }
+
+        if (!newExportedLevel) {
+            setNewExportedLevel(exportedLevel);
+            return;
+        }
+
+        setNewExportedLevel({ ...exportedLevel, name: newExportedLevel.name });
+    }, [exportedLevel]);
+
+    const [levelCode, setLevelCode] = useState("");
+
+    useEffect(() => {
+        async function func() {
+            setLevelCode(
+                await compressString(JSON.stringify(newExportedLevel)),
+            );
+        }
+        func();
+    }, [newExportedLevel]);
+
+    // const levelCode = useMemo(() => {
+    //     async function func() {
+    //         return await compressString(JSON.stringify(newExportedLevel));
+    //     }
+    //     return func();
+    // }, [newExportedLevel]);
 
     return (
         <div>
@@ -76,9 +111,43 @@ export default function Header({
                                     <DialogHeader>
                                         <DialogTitle>export level</DialogTitle>
                                     </DialogHeader>
-                                    <code className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto">
-                                        {levelCode}
-                                    </code>
+                                    <Form
+                                        action={(_) => {
+                                            navigator.clipboard.writeText(
+                                                levelCode,
+                                            );
+                                        }}
+                                    >
+                                        <FieldGroup>
+                                            <Field orientation="horizontal">
+                                                <FieldLabel htmlFor="name">
+                                                    name
+                                                </FieldLabel>
+                                                <Input
+                                                    id="name"
+                                                    name="name"
+                                                    onChange={(e) => {
+                                                        if (!newExportedLevel)
+                                                            return;
+
+                                                        setNewExportedLevel({
+                                                            ...newExportedLevel,
+                                                            name: e.target
+                                                                .value,
+                                                        });
+                                                    }}
+                                                />
+                                            </Field>
+                                            <code className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto">
+                                                {levelCode}
+                                            </code>
+                                            <Field>
+                                                <Button type="submit">
+                                                    copy
+                                                </Button>
+                                            </Field>
+                                        </FieldGroup>
+                                    </Form>
                                 </DialogContent>
                             </Dialog>
                             <Dialog>
@@ -116,29 +185,31 @@ export default function Header({
                                             }
                                         }}
                                     >
-                                        <Field>
-                                            <Textarea
-                                                className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto"
-                                                placeholder="paste level code here"
-                                                name="levelCode"
-                                            />
-                                        </Field>
-                                        <Field>
-                                            <Button
-                                                type="submit"
-                                                name="action"
-                                                value="edit"
-                                            >
-                                                edit
-                                            </Button>
-                                            <Button
-                                                type="submit"
-                                                name="action"
-                                                value="import"
-                                            >
-                                                import
-                                            </Button>
-                                        </Field>
+                                        <FieldGroup>
+                                            <Field>
+                                                <Textarea
+                                                    className="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono overflow-auto"
+                                                    placeholder="paste level code here"
+                                                    name="levelCode"
+                                                />
+                                            </Field>
+                                            <Field>
+                                                <Button
+                                                    type="submit"
+                                                    name="action"
+                                                    value="edit"
+                                                >
+                                                    edit
+                                                </Button>
+                                                <Button
+                                                    type="submit"
+                                                    name="action"
+                                                    value="import"
+                                                >
+                                                    import
+                                                </Button>
+                                            </Field>
+                                        </FieldGroup>
                                     </Form>
                                 </DialogContent>
                             </Dialog>

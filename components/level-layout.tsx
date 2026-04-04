@@ -23,7 +23,7 @@ export default function LevelLayout({
       }) {
     const [completed, setCompleted] = useState(false);
     const [verified, setVerified] = useState(false);
-    const [levelCode, setLevelCode] = useState("");
+    const [exportedLevel, setExportedLevel] = useState<Level>();
     const [importedLevel, setImportedLevel] = useState<Level>();
 
     useEffect(() => {
@@ -64,7 +64,7 @@ export default function LevelLayout({
                     levelNum={"editor"}
                     levelName={"make your own level!"}
                     levelVerified={verified}
-                    levelCode={levelCode}
+                    exportedLevel={exportedLevel}
                     setLevel={setImportedLevel}
                 />
             ) : (
@@ -87,14 +87,14 @@ export default function LevelLayout({
                                 verified ? "true" : "false",
                             );
                         }}
-                        setLevelCode={setLevelCode}
+                        setExportedLevel={setExportedLevel}
                         level={importedLevel}
                         saveLevel={true}
                     />
                 ) : (
                     <LevelPage
                         editor={true}
-                        setLevelCode={setLevelCode}
+                        setExportedLevel={setExportedLevel}
                         saveLevel={false}
                     />
                 )
