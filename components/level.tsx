@@ -152,6 +152,7 @@ export default function LevelPage({
     setCompleted,
     setVerified,
     setLevelCode,
+    saveLevel,
 }:
     | {
           editor: false;
@@ -160,18 +161,29 @@ export default function LevelPage({
           setCompleted: Dispatch<SetStateAction<boolean>>;
           setVerified?: undefined;
           setLevelCode?: undefined;
+          saveLevel?: undefined;
       }
     | {
           editor: true;
           level?: Level | undefined;
           levelNum?: undefined;
           setCompleted?: undefined;
-          setVerified: Dispatch<SetStateAction<boolean>>;
+          setVerified?: Dispatch<SetStateAction<boolean>>;
           setLevelCode: Dispatch<SetStateAction<string>>;
+          saveLevel: boolean;
       }) {
     // if (editor) {
     //     const [createdLevel, setCreatedLevel] = useState();
     // }
+
+    // const setVerifiedAndSave = setVerified
+    //     ? (verified: boolean) => {
+    //           setVerified(verified);
+
+    //           if (saveLevel)
+    //               localStorage.setItem("verified", verified ? "true" : "false");
+    //       }
+    //     : null;
 
     if (editor) {
         useEffect(() => {
@@ -181,9 +193,12 @@ export default function LevelPage({
 
             const newRules = level.rules.map((rule, i) => ({ id: i, rule }));
 
+            console.log(newRules);
+
             replaceRulesRef!.current = true;
             setRules!(newRules);
 
+            replaceWordsRef!.current = true;
             setWordConfigs!(
                 level.words.map((w, i) => ({
                     id: i,
@@ -194,22 +209,39 @@ export default function LevelPage({
             setItems({ bank: newRules, solution: [] });
         }, [level]);
 
-        useEffect(() => {
-            console.log("local storage");
+        // const initializedWithStorageRef = useRef(false);
 
-            const storedRules = localStorage.getItem("editorRules");
+        // useEffect(() => {
+        //     if (initializedWithStorageRef.current) {
+        //         return;
+        //     }
 
-            if (storedRules) {
-                console.log(JSON.parse(storedRules));
-                setRules!(JSON.parse(storedRules));
-            }
+        //     console.log("local storage");
 
-            const storedWordConfigs = localStorage.getItem("editorWordConfigs");
+        //     initializedWithStorageRef.current = true;
 
-            if (storedWordConfigs) {
-                setWordConfigs!(JSON.parse(storedWordConfigs));
-            }
-        }, []);
+        //     const storedRules = localStorage.getItem("editorRules");
+
+        //     if (storedRules) {
+        //         // console.log(JSON.parse(storedRules));
+        //         replaceRulesRef!.current = true;
+        //         setRules!(JSON.parse(storedRules));
+        //     }
+
+        //     const storedWordConfigs = localStorage.getItem("editorWordConfigs");
+
+        //     if (storedWordConfigs) {
+        //         replaceWordsRef!.current = true;
+        //         setWordConfigs!(JSON.parse(storedWordConfigs));
+        //     }
+
+        //     const storedVerified = localStorage.getItem("verified");
+
+        //     if (storedVerified) {
+        //         console.log(storedVerified);
+        //         setVerified(storedVerified === "true" ? true : false);
+        //     }
+        // }, []);
     }
 
     const [rules, setRules] = editor
@@ -226,22 +258,23 @@ export default function LevelPage({
         solution: [],
     });
 
-    const replaceRulesRef = editor ? useRef(false) : null;
-    const isFirstRuleEffectUpdateRef = editor ? useRef(true) : null;
+    const replaceRulesRef = editor ? useRef(true) : null;
+    // const isFirstRuleEffectUpdateRef = editor ? useRef(true) : null;
 
     if (editor) {
         const prevRules = usePrevious(rules);
 
         useEffect(() => {
-            if (isFirstRuleEffectUpdateRef!.current) {
-                isFirstRuleEffectUpdateRef!.current = false;
+            // if (isFirstRuleEffectUpdateRef!.current) {
+            //     isFirstRuleEffectUpdateRef!.current = false;
 
-                return;
-            }
+            //     return;
+            // }
 
-            console.log(rules);
+            console.log(prevRules);
 
-            localStorage.setItem("editorRules", JSON.stringify(rules));
+            if (saveLevel)
+                localStorage.setItem("editorRules", JSON.stringify(rules));
 
             if (rules.length === 0 && wordConfigs.length === 0) {
                 setDeleteMode!(false);
@@ -270,6 +303,16 @@ export default function LevelPage({
 
             maxRuleIdRef!.current =
                 max(addedRules.map((r) => r.id)) ?? maxRuleIdRef!.current;
+
+            if (
+                setVerified &&
+                removedRules &&
+                removedRules?.length > 0 &&
+                !success
+            ) {
+                console.log("290");
+                setVerified(false);
+            }
 
             setItems({
                 bank: [
@@ -325,19 +368,31 @@ export default function LevelPage({
 
     if (editor) {
         useEffect(() => {
-            setVerified(success);
+            setLevelCode(
+                JSON.stringify({
+                    name: "new level",
+                    words: wordConfigs.map((w) => ({
+                        initialWord: w.initialWord,
+                        targetWord: w.targetWord,
+                    })),
+                    rules: rules.map((r) => r.rule),
+                }),
+            );
+        }, [rules, wordConfigs]);
 
-            if (success) {
-                setLevelCode(
-                    JSON.stringify({
-                        name: "new level",
-                        words: wordConfigs.map((w) => ({
-                            initialWord: w.initialWord,
-                            targetWord: w.targetWord,
-                        })),
-                        rules: rules.map((r) => r.rule),
-                    }),
-                );
+        useEffect(() => {
+            if (setVerified && success) {
+                setVerified(true);
+                // setLevelCode(
+                //     JSON.stringify({
+                //         name: "new level",
+                //         words: wordConfigs.map((w) => ({
+                //             initialWord: w.initialWord,
+                //             targetWord: w.targetWord,
+                //         })),
+                //         rules: rules.map((r) => r.rule),
+                //     }),
+                // );
             }
         }, [success]);
     }
@@ -444,6 +499,7 @@ export default function LevelPage({
                 }, 1000);
             } else {
                 setSuccess(false);
+                console.log("success false");
 
                 if (timeoutRef.current !== null) {
                     clearTimeout(timeoutRef.current);
@@ -482,6 +538,8 @@ export default function LevelPage({
     const [isWordOverflowing, setIsWordOverflowing] = useState(
         [...Array(wordConfigs.length)].map((_) => false),
     );
+
+    const replaceWordsRef = editor ? useRef(false) : null;
 
     if (editor) {
         useMemo(() => {
@@ -528,17 +586,39 @@ export default function LevelPage({
             // );
         }, [wordConfigs]);
 
-        const isFirstWordEffectUpdateRef = useRef(true);
+        // const isFirstWordEffectUpdateRef = useRef(true);
 
         useEffect(() => {
-            if (isFirstWordEffectUpdateRef.current) {
-                isFirstWordEffectUpdateRef.current = false;
+            // if (isFirstWordEffectUpdateRef.current) {
+            //     isFirstWordEffectUpdateRef.current = false;
 
-                return;
-            }
+            //     return;
+            // }
 
             maxWordIdRef!.current =
                 max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
+
+            // console.log("replace words ref: " + replaceWordsRef!.current);
+
+            // const localStorageSet =
+            //     localStorage.getItem("editorWordConfigs") &&
+            //     isEqual(
+            //         wordConfigs,
+            //         JSON.parse(localStorage.getItem("editorWordConfigs")!),
+            //     );
+
+            console.log("success");
+            console.log(success);
+            // console.log(localStorage.getItem("editorWordConfigs"));
+
+            if (setVerified && !success && !replaceWordsRef!.current) {
+                console.log("563");
+                setVerified(false);
+            }
+
+            if (replaceWordsRef!.current) {
+                replaceWordsRef!.current = false;
+            }
 
             // console.log(words);
 
@@ -559,11 +639,12 @@ export default function LevelPage({
                 setDeleteMode!(false);
             }
 
-            localStorage.setItem(
-                "editorWordConfigs",
-                JSON.stringify(wordConfigs),
-            );
-        }, [wordConfigs]);
+            if (saveLevel)
+                localStorage.setItem(
+                    "editorWordConfigs",
+                    JSON.stringify(wordConfigs),
+                );
+        }, [wordConfigs, success]);
     }
 
     useEffect(() => {

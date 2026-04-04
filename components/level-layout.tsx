@@ -3,7 +3,8 @@
 import { Level } from "@/lib/level";
 import Header from "./header";
 import LevelPage from "./level";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Rule } from "@/lib/rule";
 
 export default function LevelLayout({
     editor,
@@ -25,6 +26,36 @@ export default function LevelLayout({
     const [levelCode, setLevelCode] = useState("");
     const [importedLevel, setImportedLevel] = useState<Level>();
 
+    useEffect(() => {
+        const storedRules = localStorage.getItem("editorRules");
+        const storedWordConfigs = localStorage.getItem("editorWordConfigs");
+        const storedVerified = localStorage.getItem("verified");
+
+        const rulesArr: { id: number; rule: Rule }[] = storedRules
+            ? JSON.parse(storedRules)
+            : [];
+        const wordConfigsArr: {
+            id: number;
+            initialWord: string;
+            targetWord: string;
+        }[] = storedWordConfigs ? JSON.parse(storedWordConfigs) : [];
+
+        const level: Level = {
+            name: "new level",
+            rules: rulesArr.map((r) => r.rule),
+            words: wordConfigsArr.map((w) => ({
+                initialWord: w.initialWord,
+                targetWord: w.targetWord,
+            })),
+        };
+
+        setImportedLevel(level);
+
+        if (storedVerified) {
+            setVerified(storedVerified === "true" ? true : false);
+        }
+    }, []);
+
     return (
         <div className="grid grid-rows-[auto_1fr] min-h-svh">
             {editor ? (
@@ -45,12 +76,28 @@ export default function LevelLayout({
                 />
             )}
             {editor ? (
-                <LevelPage
-                    editor={true}
-                    setVerified={setVerified}
-                    setLevelCode={setLevelCode}
-                    level={importedLevel}
-                />
+                importedLevel ? (
+                    <LevelPage
+                        editor={true}
+                        setVerified={(verified) => {
+                            setVerified(verified);
+
+                            localStorage.setItem(
+                                "verified",
+                                verified ? "true" : "false",
+                            );
+                        }}
+                        setLevelCode={setLevelCode}
+                        level={importedLevel}
+                        saveLevel={true}
+                    />
+                ) : (
+                    <LevelPage
+                        editor={true}
+                        setLevelCode={setLevelCode}
+                        saveLevel={false}
+                    />
+                )
             ) : (
                 <LevelPage
                     editor={false}
