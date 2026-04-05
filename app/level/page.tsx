@@ -4,9 +4,9 @@ import LevelLayout from "@/components/level-layout";
 import { Level } from "@/lib/level";
 import { decompressString } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-export default function Page() {
+function ImportedLevel() {
     const searchParams = useSearchParams();
 
     const levelCode = searchParams.get("code");
@@ -20,19 +20,25 @@ export default function Page() {
         func();
     }, []);
 
-    // if (!levelCode) {
-    //     console.error("code search param doesn't exist");
-
-    //     return;
-    // }
-
-    // const level: Level = JSON.parse(levelCode);
-
-    // return <LevelLayout editor={false} level={level} levelNum="custom level" />;
-
     return (
         level && (
             <LevelLayout editor={false} level={level} levelNum="custom level" />
         )
+    );
+}
+
+export default function Page() {
+    return (
+        <Suspense
+            fallback={
+                <LevelLayout
+                    editor={false}
+                    level={{ name: "new level", rules: [], words: [] }}
+                    levelNum="custom level"
+                />
+            }
+        >
+            <ImportedLevel />
+        </Suspense>
     );
 }
