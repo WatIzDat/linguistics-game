@@ -932,17 +932,20 @@ export default function LevelPage({
                     >
                         <RotateCcwIcon />
                     </Button>
-                    {(levelNumInt === null || levelNumInt >= 5) && (
+                    {!editor && (levelNumInt === null || levelNumInt >= 5) && (
                         <HybridTooltip>
-                            <HybridTooltipTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="md:hidden ml-6 mt-6 absolute bottom-0 right-0"
-                                >
-                                    <InfoIcon />
-                                </Button>
-                            </HybridTooltipTrigger>
+                            <div className="sticky mt-auto bottom-0">
+                                <HybridTooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        // className="md:hidden ml-6"
+                                        className="md:hidden ml-6 mt-6 absolute bottom-0 right-0"
+                                    >
+                                        <InfoIcon />
+                                    </Button>
+                                </HybridTooltipTrigger>
+                            </div>
                             <HybridTooltipContent
                                 className="w-fit bg-black text-white"
                                 side="left"
@@ -957,15 +960,17 @@ export default function LevelPage({
                     layout
                     className="col-start-2 lg:col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col gap-4 h-full bg-secondary rounded-4xl min-h-50 overflow-auto"
                 >
-                    <div className="md:grid md:grid-cols-3 lg:flex lg:justify-between">
+                    <div
+                        className={`${editor ? "flex max-lg:flex-col max-lg:gap-4" : "md:grid md:grid-cols-3"} lg:flex lg:justify-between`}
+                    >
                         <h2 className="col-start-2 text-3xl font-semibold text-center lg:text-left lg:ml-6 mt-6">
                             Changes
                         </h2>
                         {editor ? (
-                            <div>
+                            <div className="max-lg:flex max-lg:justify-center">
                                 <Button
                                     variant="ghost"
-                                    className="max-md:hidden mr-6 mt-6"
+                                    className="lg:mr-6 lg:mt-6"
                                     onClick={() => setDeleteMode!(!deleteMode)}
                                 >
                                     <TrashIcon />
@@ -998,7 +1003,7 @@ export default function LevelPage({
                                 >
                                     <Button
                                         variant="ghost"
-                                        className="max-md:hidden mr-6 mt-6"
+                                        className="lg:mr-6 lg:mt-6"
                                     >
                                         <PlusIcon />
                                     </Button>
