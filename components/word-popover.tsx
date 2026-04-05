@@ -30,23 +30,10 @@ export default function WordPopover({
                 </PopoverHeader>
                 <Form
                     action={(e) => {
-                        console.log(e);
-
                         onSubmit(
                             e.get("initialWord")?.toString() ?? "",
                             e.get("targetWord")?.toString() ?? "",
                         );
-
-                        // setWordConfigs!([
-                        //     ...wordConfigs,
-                        //     {
-                        //         id: maxWordIdRef!.current + 1,
-                        //         initialWord:
-                        //             e.get("initialWord")?.toString() ?? "",
-                        //         targetWord:
-                        //             e.get("targetWord")?.toString() ?? "",
-                        //     },
-                        // ]);
                     }}
                 >
                     <FieldGroup className="gap-4">

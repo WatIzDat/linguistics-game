@@ -34,7 +34,5 @@ export async function decompressString(str: string) {
 
     const text = await response.text();
 
-    console.log(text);
-
     return text;
 }

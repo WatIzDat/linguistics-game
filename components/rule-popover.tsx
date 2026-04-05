@@ -6,12 +6,13 @@ import {
     Popover,
     PopoverContent,
     PopoverHeader,
+    PopoverTitle,
     PopoverTrigger,
 } from "./ui/popover";
 import Form from "next/form";
 import { Field, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 
 export default function RulePopover({
     type,
@@ -54,7 +55,6 @@ export default function RulePopover({
     const newCustomTrigger =
         type === "edit" &&
         customTrigger(() => {
-            console.log("clicked");
             setOpen((open) => !open);
         });
 
@@ -69,13 +69,13 @@ export default function RulePopover({
             </PopoverTrigger>
             {/* )} */}
             <PopoverContent side={side}>
-                <PopoverHeader className="font-bold mb-2">
-                    {type} rule
+                <PopoverHeader className="mb-2">
+                    <PopoverTitle className="font-bold">
+                        {type} rule
+                    </PopoverTitle>
                 </PopoverHeader>
                 <Form
                     action={(e) => {
-                        console.log(e);
-
                         onSubmit(
                             e.get("pattern")?.toString()!,
                             e.get("replacement")?.toString()!,

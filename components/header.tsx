@@ -112,8 +112,6 @@ export default function Header({
                                         onSubmit={(e) => {
                                             e.preventDefault();
 
-                                            console.log("test");
-
                                             setIsCodeCopied(true);
 
                                             navigator.clipboard.writeText(
@@ -121,14 +119,6 @@ export default function Header({
                                             );
                                         }}
                                         className="grid gap-4"
-                                        // action={(_) => {
-                                        //     console.log("test");
-                                        //     setIsCodeCopied(true);
-
-                                        //     navigator.clipboard.writeText(
-                                        //         levelCode,
-                                        //     );
-                                        // }}
                                     >
                                         <FieldGroup>
                                             <Field orientation="horizontal">
@@ -183,8 +173,6 @@ export default function Header({
                                     </DialogHeader>
                                     <Form
                                         action={(e) => {
-                                            // console.log(e.get("levelCode"));
-
                                             const action = e.get("action");
                                             const levelCode = e
                                                 .get("levelCode")

@@ -13,10 +13,7 @@ import {
     RefObject,
     CSSProperties,
     Fragment,
-    PointerEventHandler,
     MouseEventHandler,
-    ButtonHTMLAttributes,
-    ClassAttributes,
     forwardRef,
     useCallback,
     useMemo,
@@ -26,16 +23,9 @@ import { CollisionPriority } from "@dnd-kit/abstract";
 import { Level, NUM_LEVELS } from "@/lib/level";
 import { clearTimeout, setTimeout } from "timers";
 import { motion } from "motion/react";
-import {
-    Edit2Icon,
-    InfoIcon,
-    PlusIcon,
-    RotateCcwIcon,
-    Trash2Icon,
-    TrashIcon,
-} from "lucide-react";
+import { InfoIcon, PlusIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
 import { Howl, Howler } from "howler";
-import { compressString, isNumeric } from "@/lib/utils";
+import { isNumeric } from "@/lib/utils";
 import { isEqual, max } from "lodash-es";
 import {
     HybridTooltip,
@@ -44,15 +34,6 @@ import {
 } from "./ui/hybrid-tooltip";
 import Word from "./word";
 import { usePrevious } from "@/lib/hooks";
-import {
-    Popover,
-    PopoverContent,
-    PopoverHeader,
-    PopoverTrigger,
-} from "./ui/popover";
-import { Field, FieldGroup, FieldLabel } from "./ui/field";
-import { Input } from "./ui/input";
-import Form from "next/form";
 import RulePopover from "./rule-popover";
 import WordPopover from "./word-popover";
 
@@ -173,19 +154,6 @@ export default function LevelPage({
           setExportedLevel: Dispatch<SetStateAction<Level | undefined>>;
           saveLevel: boolean;
       }) {
-    // if (editor) {
-    //     const [createdLevel, setCreatedLevel] = useState();
-    // }
-
-    // const setVerifiedAndSave = setVerified
-    //     ? (verified: boolean) => {
-    //           setVerified(verified);
-
-    //           if (saveLevel)
-    //               localStorage.setItem("verified", verified ? "true" : "false");
-    //       }
-    //     : null;
-
     if (editor) {
         useEffect(() => {
             if (!level) {
@@ -193,8 +161,6 @@ export default function LevelPage({
             }
 
             const newRules = level.rules.map((rule, i) => ({ id: i, rule }));
-
-            console.log(newRules);
 
             replaceRulesRef!.current = true;
             setRules!(newRules);
@@ -209,40 +175,6 @@ export default function LevelPage({
             );
             setItems({ bank: newRules, solution: [] });
         }, [level]);
-
-        // const initializedWithStorageRef = useRef(false);
-
-        // useEffect(() => {
-        //     if (initializedWithStorageRef.current) {
-        //         return;
-        //     }
-
-        //     console.log("local storage");
-
-        //     initializedWithStorageRef.current = true;
-
-        //     const storedRules = localStorage.getItem("editorRules");
-
-        //     if (storedRules) {
-        //         // console.log(JSON.parse(storedRules));
-        //         replaceRulesRef!.current = true;
-        //         setRules!(JSON.parse(storedRules));
-        //     }
-
-        //     const storedWordConfigs = localStorage.getItem("editorWordConfigs");
-
-        //     if (storedWordConfigs) {
-        //         replaceWordsRef!.current = true;
-        //         setWordConfigs!(JSON.parse(storedWordConfigs));
-        //     }
-
-        //     const storedVerified = localStorage.getItem("verified");
-
-        //     if (storedVerified) {
-        //         console.log(storedVerified);
-        //         setVerified(storedVerified === "true" ? true : false);
-        //     }
-        // }, []);
     }
 
     const [rules, setRules] = editor
@@ -260,20 +192,11 @@ export default function LevelPage({
     });
 
     const replaceRulesRef = editor ? useRef(true) : null;
-    // const isFirstRuleEffectUpdateRef = editor ? useRef(true) : null;
 
     if (editor) {
         const prevRules = usePrevious(rules);
 
         useEffect(() => {
-            // if (isFirstRuleEffectUpdateRef!.current) {
-            //     isFirstRuleEffectUpdateRef!.current = false;
-
-            //     return;
-            // }
-
-            console.log(prevRules);
-
             if (saveLevel)
                 localStorage.setItem("editorRules", JSON.stringify(rules));
 
@@ -311,7 +234,6 @@ export default function LevelPage({
                 removedRules?.length > 0 &&
                 !success
             ) {
-                console.log("290");
                 setVerified(false);
             }
 
@@ -336,7 +258,6 @@ export default function LevelPage({
                                     .includes(rule.id),
                         )
                         .map((rule) => rules.find((r) => r.id === rule.id)!),
-                    // ...addedRules,
                 ],
             });
         }, [rules]);
@@ -385,16 +306,6 @@ export default function LevelPage({
         useEffect(() => {
             if (setVerified && success) {
                 setVerified(true);
-                // setLevelCode(
-                //     JSON.stringify({
-                //         name: "new level",
-                //         words: wordConfigs.map((w) => ({
-                //             initialWord: w.initialWord,
-                //             targetWord: w.targetWord,
-                //         })),
-                //         rules: rules.map((r) => r.rule),
-                //     }),
-                // );
             }
         }, [success]);
     }
@@ -501,7 +412,6 @@ export default function LevelPage({
                 }, 1000);
             } else {
                 setSuccess(false);
-                console.log("success false");
 
                 if (timeoutRef.current !== null) {
                     clearTimeout(timeoutRef.current);
@@ -526,14 +436,6 @@ export default function LevelPage({
         [...Array(wordConfigs.length)].map((_) => null),
     );
 
-    // let wordRefs = [...Array(wordConfigs.length)].map((_) =>
-    //     useRef<HTMLDivElement>(null),
-    // );
-
-    // let measureRefs = [...Array(wordConfigs.length)].map((_) =>
-    //     useRef<HTMLDivElement>(null),
-    // );
-
     const isWordOverflowingRef = useRef(
         [...Array(wordConfigs.length)].map((_) => false),
     );
@@ -551,78 +453,19 @@ export default function LevelPage({
                     word: w.initialWord,
                 })),
             );
-
-            // maxWordIdRef!.current =
-            //     max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
-
-            // console.log(words);
-
-            // wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
-            // measureRefs.current = [...Array(wordConfigs.length)].map(
-            //     (_) => null,
-            // );
-
-            // isWordOverflowingRef.current = [...Array(wordConfigs.length)].map(
-            //     (_) => false,
-            // );
-            // setIsWordOverflowing(
-            //     [...Array(wordConfigs.length)].map((_) => false),
-            // );
-
-            // if (rules.length === 0 && wordConfigs.length === 0) {
-            //     setDeleteMode!(false);
-            // }
-            // wordRefs = [...Array(wordConfigs.length)].map((_) =>
-            //     useRef<HTMLDivElement>(null),
-            // );
-
-            // measureRefs = [...Array(wordConfigs.length)].map((_) =>
-            //     useRef<HTMLDivElement>(null),
-            // );
-
-            // isWordOverflowingRef = useRef(
-            //     [...Array(wordConfigs.length)].map((_) => false),
-            // );
-            // [isWordOverflowing, setIsWordOverflowing] = useState(
-            //     [...Array(wordConfigs.length)].map((_) => false),
-            // );
         }, [wordConfigs]);
 
-        // const isFirstWordEffectUpdateRef = useRef(true);
-
         useEffect(() => {
-            // if (isFirstWordEffectUpdateRef.current) {
-            //     isFirstWordEffectUpdateRef.current = false;
-
-            //     return;
-            // }
-
             maxWordIdRef!.current =
                 max(wordConfigs.map((w) => w.id)) ?? maxWordIdRef!.current;
 
-            // console.log("replace words ref: " + replaceWordsRef!.current);
-
-            // const localStorageSet =
-            //     localStorage.getItem("editorWordConfigs") &&
-            //     isEqual(
-            //         wordConfigs,
-            //         JSON.parse(localStorage.getItem("editorWordConfigs")!),
-            //     );
-
-            console.log("success");
-            console.log(success);
-            // console.log(localStorage.getItem("editorWordConfigs"));
-
             if (setVerified && !success && !replaceWordsRef!.current) {
-                console.log("563");
                 setVerified(false);
             }
 
             if (replaceWordsRef!.current) {
                 replaceWordsRef!.current = false;
             }
-
-            // console.log(words);
 
             wordRefs.current = [...Array(wordConfigs.length)].map((_) => null);
             measureRefs.current = [...Array(wordConfigs.length)].map(
@@ -748,11 +591,6 @@ export default function LevelPage({
                         }}
                     >
                         {items.solution.map((rule, i) => (
-                            // <RulePopover
-                            //     key={rule.id}
-                            //     type="edit"
-                            //     side="right"
-                            //     customTrigger={(onClick) => (
                             <SortableButton
                                 key={rule.id}
                                 sortableId={rule.id}
@@ -775,47 +613,10 @@ export default function LevelPage({
                                     setViewedRuleIndex(
                                         viewedRuleIndex === i ? null : i,
                                     );
-
-                                    // deleteMode
-                                    //     ? setRules!(
-                                    //           rules.filter(
-                                    //               (r) =>
-                                    //                   r.id !== rule.id,
-                                    //           ),
-                                    //       )
-                                    //     : onClick(event);
                                 }}
                             >
                                 {formatRule(rule.rule)}
                             </SortableButton>
-                            // )}
-                            //     onSubmit={(
-                            //         pattern,
-                            //         replacement,
-                            //         environmentBefore,
-                            //         environmentAfter,
-                            //     ) =>
-                            //         setRules!(
-                            //             rules.map((r) =>
-                            //                 r.id === rule.id
-                            //                     ? {
-                            //                           ...rule,
-                            //                           rule: {
-                            //                               pattern: pattern,
-                            //                               replacement:
-                            //                                   replacement,
-                            //                               environment:
-                            //                                   environmentBefore ||
-                            //                                   environmentAfter
-                            //                                       ? `${environmentBefore} _ ${environmentAfter}`
-                            //                                       : null,
-                            //                           },
-                            //                       }
-                            //                     : r,
-                            //             ),
-                            //         )
-                            //     }
-                            // />
                         ))}
                     </Column>
                 </motion.div>
@@ -1018,8 +819,8 @@ export default function LevelPage({
                         id="bank"
                         className="h-full w-full flex flex-col lg:flex-row flex-nowrap lg:flex-wrap overflow-auto gap-1 md:gap-2 lg:gap-4 p-4 items-center lg:justify-center"
                     >
-                        {items.bank.map(
-                            (rule, i) => (
+                        {items.bank.map((rule, i) =>
+                            editor ? (
                                 <RulePopover
                                     key={rule.id}
                                     type="edit"
@@ -1087,33 +888,31 @@ export default function LevelPage({
                                         )
                                     }
                                 />
+                            ) : (
+                                <SortableButton
+                                    key={rule.id}
+                                    sortableId={rule.id}
+                                    index={i}
+                                    group="bank"
+                                    className={`w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none ${deleteMode && "bg-red-500"}`}
+                                    onPointerOver={() =>
+                                        setAffectedIndices(
+                                            words.map(
+                                                (w) =>
+                                                    applyRule(
+                                                        rule.rule,
+                                                        w.word,
+                                                    )[1],
+                                            ),
+                                        )
+                                    }
+                                    onPointerLeave={() =>
+                                        setAffectedIndices([])
+                                    }
+                                >
+                                    {formatRule(rule.rule)}
+                                </SortableButton>
                             ),
-                            // )
-                            // : (
-                            //     <SortableButton
-                            //         key={rule.id}
-                            //         sortableId={rule.id}
-                            //         index={i}
-                            //         group="bank"
-                            //         className="w-full h-fit lg:size-fit md:p-4 lg:p-6 text-xs md:text-sm lg:text-base xl:text-lg select-none"
-                            //         onPointerOver={() =>
-                            //             setAffectedIndices(
-                            //                 words.map(
-                            //                     (w) =>
-                            //                         applyRule(
-                            //                             rule.rule,
-                            //                             w.word,
-                            //                         )[1],
-                            //                 ),
-                            //             )
-                            //         }
-                            //         onPointerLeave={() =>
-                            //             setAffectedIndices([])
-                            //         }
-                            //     >
-                            //         {formatRule(rule.rule)}
-                            //     </SortableButton>
-                            // ),
                         )}
                     </Column>
                 </motion.div>
