@@ -14,6 +14,7 @@ export default async function Home() {
                 </p>
             </header>
             <PlayLink />
+            <Link href="editor">editor</Link>
             <div className="mt-6">
                 <h2 className="font-extralight mb-6">levels</h2>
                 <div
