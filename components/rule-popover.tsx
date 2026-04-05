@@ -69,7 +69,9 @@ export default function RulePopover({
             </PopoverTrigger>
             {/* )} */}
             <PopoverContent side={side}>
-                <PopoverHeader>{type} rule</PopoverHeader>
+                <PopoverHeader className="font-bold mb-2">
+                    {type} rule
+                </PopoverHeader>
                 <Form
                     action={(e) => {
                         console.log(e);

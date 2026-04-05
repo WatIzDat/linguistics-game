@@ -54,6 +54,7 @@ import { Field, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import Form from "next/form";
 import RulePopover from "./rule-popover";
+import WordPopover from "./word-popover";
 
 const SortableButton = forwardRef(
     (
@@ -853,70 +854,19 @@ export default function LevelPage({
                     ))}
                     {editor && (
                         <div className="flex items-center justify-center size-1/2">
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button variant="ghost">
-                                        <PlusIcon />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent side="left">
-                                    <PopoverHeader>add word</PopoverHeader>
-                                    <Form
-                                        action={(e) => {
-                                            console.log(e);
-
-                                            setWordConfigs!([
-                                                ...wordConfigs,
-                                                {
-                                                    id:
-                                                        maxWordIdRef!.current +
-                                                        1,
-                                                    initialWord:
-                                                        e
-                                                            .get("initialWord")
-                                                            ?.toString() ?? "",
-                                                    targetWord:
-                                                        e
-                                                            .get("targetWord")
-                                                            ?.toString() ?? "",
-                                                },
-                                            ]);
-                                        }}
-                                    >
-                                        <FieldGroup className="gap-4">
-                                            <Field orientation="horizontal">
-                                                <FieldLabel
-                                                    htmlFor="initialWord"
-                                                    className="w-1/2"
-                                                >
-                                                    initial word
-                                                </FieldLabel>
-                                                <Input
-                                                    id="initialWord"
-                                                    name="initialWord"
-                                                />
-                                            </Field>
-                                            <Field orientation="horizontal">
-                                                <FieldLabel
-                                                    htmlFor="targetWord"
-                                                    className="w-1/2"
-                                                >
-                                                    target word
-                                                </FieldLabel>
-                                                <Input
-                                                    id="targetWord"
-                                                    name="targetWord"
-                                                />
-                                            </Field>
-                                            <Field>
-                                                <Button type="submit">
-                                                    add
-                                                </Button>
-                                            </Field>
-                                        </FieldGroup>
-                                    </Form>
-                                </PopoverContent>
-                            </Popover>
+                            <WordPopover
+                                side="top"
+                                onSubmit={(initialWord, targetWord) => {
+                                    setWordConfigs!([
+                                        ...wordConfigs,
+                                        {
+                                            id: maxWordIdRef!.current + 1,
+                                            initialWord,
+                                            targetWord,
+                                        },
+                                    ]);
+                                }}
+                            />
                         </div>
                     )}
                     <Button
@@ -1003,7 +953,40 @@ export default function LevelPage({
                                 >
                                     <Button
                                         variant="ghost"
-                                        className="lg:mr-6 lg:mt-6"
+                                        className="max-sm:hidden lg:mr-6 lg:mt-6"
+                                    >
+                                        <PlusIcon />
+                                    </Button>
+                                </RulePopover>
+                                <RulePopover
+                                    type="add"
+                                    side="top"
+                                    onSubmit={(
+                                        pattern,
+                                        replacement,
+                                        environmentBefore,
+                                        environmentAfter,
+                                    ) =>
+                                        setRules!([
+                                            ...rules,
+                                            {
+                                                id: maxRuleIdRef!.current + 1,
+                                                rule: {
+                                                    pattern: pattern,
+                                                    replacement: replacement,
+                                                    environment:
+                                                        environmentBefore ||
+                                                        environmentAfter
+                                                            ? `${environmentBefore} _ ${environmentAfter}`
+                                                            : null,
+                                                },
+                                            },
+                                        ])
+                                    }
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        className="sm:hidden lg:mr-6 lg:mt-6"
                                     >
                                         <PlusIcon />
                                     </Button>
