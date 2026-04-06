@@ -35,6 +35,7 @@ export default function Page() {
                     editor={false}
                     level={{ name: "new level", rules: [], words: [] }}
                     levelNum="custom level"
+                    skeleton
                 />
             }
         >

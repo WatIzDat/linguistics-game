@@ -10,16 +10,19 @@ export default function LevelLayout({
     editor,
     level,
     levelNum,
+    skeleton,
 }:
     | {
           editor: false;
           level: Level;
           levelNum: string;
+          skeleton?: boolean;
       }
     | {
           editor: true;
           level?: undefined;
           levelNum?: undefined;
+          skeleton?: boolean;
       }) {
     const [completed, setCompleted] = useState(false);
     const [verified, setVerified] = useState(false);
@@ -27,6 +30,18 @@ export default function LevelLayout({
     const [importedLevel, setImportedLevel] = useState<Level>();
 
     useEffect(() => {
+        if (!editor) {
+            if (!skeleton) {
+                umami.track("level-started", { levelNum });
+            }
+
+            return;
+        }
+
+        if (!skeleton) {
+            umami.track("editor-started");
+        }
+
         const storedRules = localStorage.getItem("editorRules");
         const storedWordConfigs = localStorage.getItem("editorWordConfigs");
         const storedVerified = localStorage.getItem("verified");

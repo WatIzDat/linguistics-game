@@ -337,6 +337,8 @@ export default function LevelPage({
           ? Number.parseInt(levelNum)
           : null;
 
+    const completedEventSentRef = useRef(false);
+
     useEffect(
         () => {
             setTimelineHeaderVisible(items.solution.length <= 0);
@@ -391,6 +393,12 @@ export default function LevelPage({
 
                     if (!editor) {
                         setCompleted(true);
+
+                        if (!completedEventSentRef.current) {
+                            umami.track("level-completed", { levelNum });
+
+                            completedEventSentRef.current = true;
+                        }
                     }
 
                     if ((editor && !success) || isFirstSuccessRef.current) {

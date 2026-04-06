@@ -112,6 +112,8 @@ export default function Header({
                                         onSubmit={(e) => {
                                             e.preventDefault();
 
+                                            umami.track("level-exported");
+
                                             setIsCodeCopied(true);
 
                                             navigator.clipboard.writeText(
@@ -177,6 +179,8 @@ export default function Header({
                                             const levelCode = e
                                                 .get("levelCode")
                                                 ?.toString()!;
+
+                                            umami.track("level-imported");
 
                                             if (action === "import") {
                                                 router.push(
